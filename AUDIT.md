@@ -20,7 +20,13 @@ The dataset leaves Denmark's origin and adoption years empty. The [Danish Embass
 
 `test_site.cjs` checks all six combinations of two date measures and three interval sizes against independently counted rows, checks Denmark's undated tile and its details, and exercises the existing filters and quiz. `test_export.cjs` uses jsdom and a real `@napi-rs/canvas` renderer to test the six PNG variants: every one of the 205 flags is drawn once, dated flags appear in their correct interval, undated names and watermark appear, and all rendered flags have visible nonblank pixels. A deliberately missing image causes a rejection. The download button path and filename are exercised. The default 20-year origin export is 4,120 × 2,655 pixels and was inspected as a PNG; it is not a real-browser rendering test. User-visible rendering and download behavior in a real browser remain unverified because browser access was unavailable.
 
-Tests run after the last generated data change:
+## Documented milestones and flag backgrounds — 31 October 2026
+
+The previous paragraph records the original export, before this revision. Denmark now has a **1398 depiction** marker, based on [Danmarkshistorien / Lex](https://danmarkshistorien.lex.dk/Dannebrog), which describes the flag on Erik of Pomerania's seal that year. It is not a creation year and is not claimed to be the earliest evidence; the source separately describes an approximately 1380 depiction. The user requested documented dates, not the 1219 legend. Five other unknown-origin entries have independently sourced, explicitly typed dated milestones in `documented_milestones.json`. These markers are separate from the bars and their counts. Maldives remains without a milestone after review because available accounts conflict over the precise change of the current flag. The 198 original non-null CSV origin entries have not been re-audited against every source and include approximate or first-use dates.
+
+The chart now renders flags without a white fill in the unused portions of their frames. Export preserves each image's proportions, uses a fine outline at the image boundary and retains the low-opacity `@Calcetinletal` watermark. The canvas test uses a deliberately square synthetic flag over a contrasting background to verify that padding remains unchanged and the flag itself is drawn. On both chart and export, outlined milestone markers have a separate visual key. Tests compare every flag and marker's bin against the source rows and milestone records for all six date/interval combinations, check watermark and unknown labels, and verify rejection of a missing image, identity mismatch, missing milestone year and an unsupported legend-like kind. The default exported PNG is now 4,120 × 3,073 pixels and was inspected visually. The real-browser flow remains unverified because browser access was unavailable.
+
+Earlier baseline results, before the milestone checks were added:
 
 ```text
 python3 test_data.py /tmp/flag_factbook.tar.gz
@@ -29,3 +35,5 @@ node --check app.js
 node test_site.cjs /tmp/flag-atlas-test/node_modules/jsdom
 PASS: 205 records, timeline bins and unknown lists, filters, details and quiz tested in jsdom.
 ```
+
+Current milestone and export checks: `python3 test_data.py /tmp/flag_factbook.tar.gz` checked all 205 CSV rows, 205 accounts, 11 curated stories and six milestone records. `node test_site.cjs /tmp/flag-atlas-test/node_modules/jsdom` passed the interactive checks. `node test_export.cjs /tmp/flag-atlas-test/node_modules/jsdom /tmp/flag-atlas-test/node_modules/@napi-rs/canvas /tmp/flag_atlas_milestones_clean.png` passed all six modes, verifying 205 base flags, the six separate origin-mode markers, positional checks, named unknowns, watermark, invalid inputs, transparent padding and the programmatic download path.

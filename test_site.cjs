@@ -5,6 +5,7 @@ const path = require('node:path');
 const {JSDOM, VirtualConsole} = require(process.argv[2]);
 const root = __dirname;
 const rows = JSON.parse(fs.readFileSync(path.join(root,'data.json')));
+const milestones = JSON.parse(fs.readFileSync(path.join(root,'documented_milestones.json')));
 const errors = [];
 const virtualConsole = new VirtualConsole();
 virtualConsole.on('jsdomError', e => errors.push(e.message));
@@ -35,6 +36,9 @@ function checkTimeline(field, width){
     const actual=[...column.querySelectorAll('.history-tile')].map(t=>t.dataset.country).sort();
     const expected=dated.filter(r=>r[field]>=start&&r[field]<start+width).map(r=>r.country).sort();
     assert.deepEqual(actual,expected,`interval ${start}`);
+    const eventNames=[...column.querySelectorAll('.history-milestone')].map(t=>t.dataset.country).sort();
+    const expectedEvents=field==='flag_origin_year'?Object.entries(milestones).filter(([,m])=>m.year>=start&&m.year<start+width).map(([country])=>country).sort():[];
+    assert.deepEqual(eventNames,expectedEvents,`documented milestones in interval ${start}`);
   }
 }
 (async()=>{
@@ -48,6 +52,9 @@ function checkTimeline(field, width){
   assert.ok(denmark, 'Denmark must be visible among undated flags');
   assert.ok(denmark.querySelector('img'), 'Undated entries display their flag');
   click(denmark); assert.match($('detail-content').textContent,/Exact creation and first adoption years are unknown/); click($('close-dialog'));
+  const marker=doc.querySelector('.history-milestone[data-country="Denmark"]');
+  assert.ok(marker); assert.match(marker.textContent,/1398/); click(marker);
+  assert.match($('detail-content').textContent,/royal seal dated 1398/); assert.match($('detail-content').textContent,/not its creation year/);click($('close-dialog'));
   change('history-bin','50'); checkTimeline('flag_origin_year',50);
   change('history-bin','100'); checkTimeline('flag_origin_year',100);
   change('history-measure','current_adoption_year'); checkTimeline('current_adoption_year',100);

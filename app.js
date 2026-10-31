@@ -11,7 +11,7 @@ const periods = [
 const $ = id => document.getElementById(id);
 const escapeHTML = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safeURL = s => { try { const u = new URL(s); return ['https:','http:'].includes(u.protocol) ? u.href : ''; } catch { return ''; } };
-const state = {rows:[], accounts:{}, curated:{}, selected:new Set(), limit:24, score:0, rounds:0, pair:[], answered:false};
+const state = {rows:[], accounts:{}, curated:{}, milestones:{}, selected:new Set(), limit:24, score:0, rounds:0, pair:[], answered:false};
 const yearText = row => row.flag_origin_year == null ? 'Unknown' : (row.origin_basis.includes('approximate') ? 'c. ' : '') + row.flag_origin_year;
 const scopeText = scope => scope === 'UN member' ? 'UN member' : scope.replace('Additional ', '');
 const imageHTML = row => row.image ? `<img src="${escapeHTML(row.image)}" alt="" loading="lazy">` : '<span class="missing-flag">ILLUSTRATION<br>UNAVAILABLE</span>';
@@ -70,29 +70,41 @@ function reset(){
   render();
 }
 
+function checkedMilestones(rows, records){
+  return Object.entries(records).map(([country,record])=>{
+    const matches=rows.filter(row=>row.country===country);
+    if(matches.length!==1 || matches[0].iso_alpha2!==record.iso_alpha2 || matches[0].flag_origin_year!==null || !Number.isInteger(record.year) || !['documented_depiction','documented_adoption','documented_regulation','documented_version_change'].includes(record.kind) || !record.description || !record.source_name || !record.status?.includes('not a creation date') || !safeURL(record.source)) throw new Error(`Invalid documented milestone for ${country}`);
+    return {row:matches[0],...record};
+  });
+}
+
 function historyData(rows, field, width){
   const dated = rows.filter(r => Number.isInteger(r[field]));
   const unknown = rows.filter(r => !Number.isInteger(r[field])).sort((a,b)=>a.country.localeCompare(b.country));
-  if(!dated.length) return {dated, unknown, bins:[], max:0};
-  const first = Math.floor(Math.min(...dated.map(r=>r[field]))/width)*width;
-  const last = Math.floor(Math.max(...dated.map(r=>r[field]))/width)*width;
+  const milestones=field==='flag_origin_year'?checkedMilestones(rows,state.milestones):[];
+  if(!dated.length) return {dated, unknown, milestones, bins:[], max:0};
+  const dates=dated.map(r=>r[field]).concat(milestones.map(m=>m.year));
+  const first = Math.floor(Math.min(...dates)/width)*width;
+  const last = Math.floor(Math.max(...dates)/width)*width;
   const bins = [];
   for(let start=first; start<=last; start+=width){
-    bins.push({start, rows:dated.filter(r=>r[field]>=start && r[field]<start+width).sort((a,b)=>a[field]-b[field] || a.country.localeCompare(b.country))});
+    bins.push({start, rows:dated.filter(r=>r[field]>=start && r[field]<start+width).sort((a,b)=>a[field]-b[field] || a.country.localeCompare(b.country)), milestones:milestones.filter(m=>m.year>=start && m.year<start+width).sort((a,b)=>a.year-b.year || a.row.country.localeCompare(b.row.country))});
   }
-  return {dated, unknown, bins, max:Math.max(...bins.map(b=>b.rows.length))};
+  return {dated, unknown, milestones, bins, max:Math.max(...bins.map(b=>b.rows.length))};
 }
 
 function renderHistory(){
   const field = $('history-measure').value, width = Number($('history-bin').value);
-  const {dated,unknown,bins,max}=historyData(state.rows,field,width);
+  const {dated,unknown,milestones,bins,max}=historyData(state.rows,field,width);
   if (!dated.length) { $('history-chart').textContent = 'No dates available.'; return; }
   const rowHeight=30, plotHeight = Math.max(150, max*rowHeight+35);
   const ticks=[];
   for(let n=0;n<=max;n+=10) ticks.push(`<span class="history-tick" style="bottom:${n*rowHeight}px">${n}</span>`);
-  $('history-summary').textContent = `${dated.length} dated entries · ${unknown.length} without a date`;
-  $('history-chart').innerHTML = `<div class="history-axis" style="height:${plotHeight}px"><span class="history-axis-title">FLAGS</span>${ticks.join('')}</div><div class="history-columns" style="--plot-height:${plotHeight}px">${bins.map(bin=>`<div class="history-column"><div class="history-stack" style="height:${plotHeight}px">${bin.rows.length ? `<span class="history-total">${bin.rows.length}</span>` : ''}${bin.rows.slice().reverse().map(row=>`<button type="button" class="history-tile" data-country="${escapeHTML(row.country)}" title="${escapeHTML(row.country)} · ${row[field]}" aria-label="${escapeHTML(row.country)}, ${row[field]}. Open details.">${row.image ? `<img src="${escapeHTML(row.image)}" alt="" loading="lazy">` : '<span>?</span>'}</button>`).join('')}</div><span class="history-year">${bin.start}</span></div>`).join('')}</div>`;
+  $('history-summary').textContent = `${dated.length} recorded ${field==='flag_origin_year'?'origins':'adoptions'} · ${unknown.length} unknown${milestones.length?` · ${milestones.length} separate milestones`:''}`;
+  $('milestone-legend').hidden = !milestones.length;
+  $('history-chart').innerHTML = `<div class="history-axis" style="height:${plotHeight}px"><span class="history-axis-title">FLAGS</span>${ticks.join('')}</div><div class="history-columns" style="--plot-height:${plotHeight}px">${bins.map(bin=>`<div class="history-column"><div class="history-stack" style="height:${plotHeight}px">${bin.rows.length ? `<span class="history-total">${bin.rows.length}</span>` : ''}${bin.rows.slice().reverse().map(row=>`<button type="button" class="history-tile" data-country="${escapeHTML(row.country)}" title="${escapeHTML(row.country)} · ${row[field]}" aria-label="${escapeHTML(row.country)}, ${row[field]}. Open details.">${row.image ? `<img src="${escapeHTML(row.image)}" alt="" loading="lazy">` : '<span>?</span>'}</button>`).join('')}</div><span class="history-year">${bin.start}</span><div class="history-milestones">${bin.milestones.map(m=>`<button type="button" class="history-milestone" data-country="${escapeHTML(m.row.country)}" title="${escapeHTML(m.row.country)} · ${m.year}: documented milestone, not a creation date" aria-label="${escapeHTML(m.row.country)}, ${m.year}: documented milestone, not a creation date. Open details.">${imageHTML(m.row)}<span>${m.year}</span></button>`).join('')}</div></div>`).join('')}</div>`;
   $('undated-summary').textContent = `${unknown.length} flags with ${field === 'flag_origin_year' ? 'unknown origin' : 'unknown adoption'} year`;
+  document.querySelector('.undated-panel p').textContent = field==='flag_origin_year' ? 'Their origin year is unknown. Where supported, a different documented milestone appears below the timeline.' : 'No current adoption year is recorded for these entries.';
   $('undated-list').innerHTML = unknown.length ? unknown.map(r=>`<button type="button" data-country="${escapeHTML(r.country)}">${imageHTML(r)}<span>${escapeHTML(r.country)}</span></button>`).join('') : '<p>All entries have a recorded date for this measure.</p>';
 }
 
@@ -107,22 +119,25 @@ function loadFlagImage(row){
 }
 
 function drawFlag(ctx,img,x,y,width,height){
-  ctx.fillStyle='#fff'; ctx.fillRect(x,y,width,height);
   const scale=Math.min(width/img.naturalWidth,height/img.naturalHeight);
   const w=img.naturalWidth*scale,h=img.naturalHeight*scale;
-  ctx.drawImage(img,x+(width-w)/2,y+(height-h)/2,w,h);
-  ctx.strokeStyle='#aab9af'; ctx.lineWidth=1; ctx.strokeRect(x+.5,y+.5,width-1,height-1);
+  const left=x+(width-w)/2,top=y+(height-h)/2;
+  ctx.drawImage(img,left,top,w,h);
+  ctx.strokeStyle='#aab9af'; ctx.lineWidth=1; ctx.strokeRect(left+.5,top+.5,Math.max(0,w-1),Math.max(0,h-1));
 }
 
 async function createHistoryPNG(rows,field,interval){
-  const {dated,unknown,bins,max}=historyData(rows,field,interval);
+  const {dated,unknown,milestones,bins,max}=historyData(rows,field,interval);
   if(!dated.length) throw new Error('There are no dated flags for this measure.');
   const images=new Map(await Promise.all(rows.map(loadFlagImage)));
   const margin=140, columnWidth=Math.max(96,Math.floor((2200-2*margin)/bins.length)), flagW=80, flagH=30, rowH=36;
   const canvas=document.createElement('canvas');
   canvas.width=Math.max(2200,margin*2+bins.length*columnWidth);
   const plotTop=310, plotHeight=max*rowH+54, baseline=plotTop+plotHeight;
-  const unknownTop=baseline+160, unknownRowH=58, unknownColumns=4;
+  const milestoneRows=Math.max(0,...bins.map(bin=>bin.milestones.length));
+  const milestoneHeight=milestones.length?90+milestoneRows*55:0;
+  const milestoneInfoHeight=milestones.length?Math.ceil(milestones.length/3)*34+40:0;
+  const unknownTop=baseline+160+milestoneHeight+milestoneInfoHeight, unknownRowH=58, unknownColumns=4;
   const unknownHeight=Math.max(1,Math.ceil(unknown.length/unknownColumns))*unknownRowH;
   canvas.height=unknownTop+100+unknownHeight+115;
   const ctx=canvas.getContext('2d'); if(!ctx) throw new Error('Canvas is unavailable in this browser.');
@@ -133,7 +148,7 @@ async function createHistoryPNG(rows,field,interval){
   ctx.fillText(`${dated.length} dated flags · ${unknown.length} without a recorded date · ${interval}-year intervals`,margin,193);
   ctx.font='22px sans-serif';
   ctx.fillText(field==='flag_origin_year'?'Origin dates can refer to designs, precursors, first use or adoption; they are not a uniform creation date.':'The current adoption year is distinct from the origin of a design or its colors.',margin,235);
-  ctx.fillText('Each tile represents one flag. Column labels mark the first year of each interval.',margin,269);
+  ctx.fillText('Each tile in the bars represents one flag. Column labels mark the first year of each interval.',margin,269);
   ctx.save(); ctx.globalAlpha=.11; ctx.fillStyle='#17343b'; ctx.font='bold 76px sans-serif';
   ctx.textAlign='center'; ctx.translate(canvas.width*.53,plotTop+plotHeight*.48); ctx.rotate(-.12); ctx.fillText('@Calcetinletal',0,0); ctx.restore();
   ctx.strokeStyle='#cbd6cb'; ctx.fillStyle='#5d756a'; ctx.font='21px sans-serif'; ctx.textAlign='right';
@@ -147,6 +162,20 @@ async function createHistoryPNG(rows,field,interval){
     if(bin.rows.length) ctx.fillText(String(bin.rows.length),x+flagW/2,baseline-bin.rows.length*rowH-10);
     ctx.font='22px sans-serif';ctx.fillText(String(bin.start),x+flagW/2,baseline+38);
   });
+  if(milestones.length){
+    ctx.textAlign='left';ctx.fillStyle='#a4472a';ctx.font='bold 20px sans-serif';
+    ctx.fillText('OUTLINED FLAGS: DOCUMENTED MILESTONES · ORIGIN UNKNOWN · NOT INCLUDED IN THE COUNTS ABOVE',margin,baseline+82);
+    bins.forEach((bin,index)=>bin.milestones.forEach((milestone,i)=>{
+      const x=margin+index*columnWidth+(columnWidth-flagW)/2,y=baseline+102+i*55;
+      drawFlag(ctx,images.get(milestone.row.country),x,y,flagW,flagH);
+      ctx.strokeStyle='#c75e37';ctx.lineWidth=3;ctx.strokeRect(x,y,flagW,flagH);
+      ctx.fillStyle='#a4472a';ctx.font='bold 18px sans-serif';ctx.textAlign='center';ctx.fillText(String(milestone.year),x+flagW/2,y+49);
+    }));
+    const kindLabel={documented_depiction:'depiction',documented_adoption:'adoption',documented_regulation:'regulation',documented_version_change:'version change'};
+    const infoTop=baseline+112+milestoneRows*55,infoWidth=(canvas.width-margin*2)/3;
+    ctx.font='20px sans-serif';ctx.fillStyle='#794a39';ctx.textAlign='left';
+    milestones.forEach((m,i)=>ctx.fillText(`${m.row.country} ${m.year} · ${kindLabel[m.kind]}`,margin+(i%3)*infoWidth,infoTop+Math.floor(i/3)*34));
+  }
   ctx.textAlign='left'; ctx.fillStyle='#17343b';ctx.font='bold 29px sans-serif';
   ctx.fillText(`UNKNOWN ${field==='flag_origin_year'?'ORIGIN':'ADOPTION'} YEAR  ·  ${unknown.length}`,margin,unknownTop);
   ctx.fillStyle='#526d64';ctx.font='21px sans-serif';ctx.fillText('Included separately because no reliable year is recorded in the supplied dataset.',margin,unknownTop+36);
@@ -161,7 +190,7 @@ async function createHistoryPNG(rows,field,interval){
   });
   const footer=canvas.height-42;
   ctx.fillStyle='#17343b';ctx.font='bold 22px sans-serif';ctx.fillText('FLAG STORIES  ·  @Calcetinletal',margin,footer);
-  ctx.textAlign='right';ctx.font='20px sans-serif';ctx.fillText('Source: supplied flag origins dataset · Illustrations: FlagCDN / Wikimedia Commons',canvas.width-margin,footer);
+  ctx.textAlign='right';ctx.font='20px sans-serif';ctx.fillText('Sources: supplied dataset and milestone records · Flags: FlagCDN / Wikimedia Commons',canvas.width-margin,footer);
   ctx.font='18px sans-serif';ctx.fillText('calcetinletal.github.io/flag-atlas/',canvas.width-margin,footer+28);
   const blob=await new Promise((resolve,reject)=>canvas.toBlob(value=>value?resolve(value):reject(new Error('PNG creation failed.')),'image/png'));
   return {blob,width:canvas.width,height:canvas.height};
@@ -187,12 +216,14 @@ function details(row){
   const colors = row.colors ? row.colors.map(c=>`<span class="dot" style="background:${palette[c]}"></span>${c}`).join(' ') : 'Unavailable';
   const account = state.accounts[row.country];
   const curated = state.curated[row.country];
+  const milestone = state.milestones[row.country];
+  const milestoneHTML = milestone ? `<div class="milestone-detail"><strong>DOCUMENTED MILESTONE · ${milestone.year}</strong><p>${escapeHTML(milestone.description)} <a href="${escapeHTML(safeURL(milestone.source))}" target="_blank" rel="noopener noreferrer">${escapeHTML(milestone.source_name)} ↗</a></p></div>` : '';
   let accountHTML = '<p>No sourced color account has been added for this entry yet. The date sources below may offer further context.</p>';
   if(curated) accountHTML = `<p>${escapeHTML(curated.text)}</p><p>${escapeHTML(curated.scope)} <a href="${escapeHTML(safeURL(curated.url))}" target="_blank" rel="noopener noreferrer">${escapeHTML(curated.source_name)} ↗</a></p>`;
   else if(account && account.status === 'variant_conflict') accountHTML = '<p>The archived source describes a different flag variant, so its account is not shown here. The color story for this variant remains to be researched.</p>';
   else if(account && account.status === 'profile_only') accountHTML = `<p>The archived profile does not provide a separately labelled history or meaning. <a href="${escapeHTML(safeURL(account.url))}" target="_blank" rel="noopener noreferrer">Read its flag description ↗</a></p>`;
   else if(account && account.status === 'excerpt') accountHTML = `<p class="account-label">ARCHIVED WORLD FACTBOOK · ${escapeHTML(account.kind.toUpperCase())}</p><blockquote>“${escapeHTML(account.excerpt)}”</blockquote><p>Short extract from a historical account, not necessarily an official or complete interpretation. <a href="${escapeHTML(safeURL(account.url))}" target="_blank" rel="noopener noreferrer">Read the full source ↗</a></p>`;
-  $('detail-content').innerHTML = `<div class="detail-body"><div class="detail-image flag-frame">${imageHTML(row)}</div><p class="eyebrow">${escapeHTML(row.scope)} · ${escapeHTML(row.flag_variant)}</p><h2>${escapeHTML(row.country)}</h2><span class="detail-basis">Origin basis: ${escapeHTML(basis)}</span><div class="detail-grid"><div><small>ORIGIN YEAR</small><strong>${yearText(row)}</strong></div><div><small>CURRENT VERSION</small><strong>${row.current_version_year ?? 'Unknown'}</strong></div><div><small>CURRENT ADOPTION</small><strong>${row.current_adoption_year ?? 'Unknown'}</strong></div></div><div class="detail-colors">${colors}</div><div class="color-story"><h3>History &amp; symbolism</h3>${accountHTML}<p>Interpretations can differ, and the source may discuss a related state or civil flag. A flag’s colors can predate its recorded origin year.</p></div><p>${escapeHTML(row.notes)}</p><p>Source type: ${escapeHTML(row.source_type)} · Dataset verified as of ${escapeHTML(row.verified_as_of)}</p><div>${links}</div></div>`;
+  $('detail-content').innerHTML = `<div class="detail-body"><div class="detail-image flag-frame">${imageHTML(row)}</div><p class="eyebrow">${escapeHTML(row.scope)} · ${escapeHTML(row.flag_variant)}</p><h2>${escapeHTML(row.country)}</h2><span class="detail-basis">Origin basis: ${escapeHTML(basis)}</span><div class="detail-grid"><div><small>ORIGIN YEAR</small><strong>${yearText(row)}</strong></div><div><small>CURRENT VERSION</small><strong>${row.current_version_year ?? 'Unknown'}</strong></div><div><small>CURRENT ADOPTION</small><strong>${row.current_adoption_year ?? 'Unknown'}</strong></div></div>${milestoneHTML}<div class="detail-colors">${colors}</div><div class="color-story"><h3>History &amp; symbolism</h3>${accountHTML}<p>Interpretations can differ, and the source may discuss a related state or civil flag. A flag’s colors can predate its recorded origin year.</p></div><p>${escapeHTML(row.notes)}</p><p>Source type: ${escapeHTML(row.source_type)} · Dataset verified as of ${escapeHTML(row.verified_as_of)}</p><div>${links}</div></div>`;
   $('details').showModal();
 }
 
@@ -221,10 +252,15 @@ async function init(){
   try {
     const response=await fetch('data.json'); if(!response.ok) throw new Error(`HTTP ${response.status}`);
     state.rows=await response.json();
+    const milestonesResponse=await fetch('documented_milestones.json');
+    if(!milestonesResponse.ok) throw new Error('Documented milestone data unavailable.');
+    state.milestones=await milestonesResponse.json();
+    checkedMilestones(state.rows,state.milestones);
     for(const [file,key] of [['flag_accounts.json','accounts'],['curated_accounts.json','curated']]){
       try {const response=await fetch(file); if(response.ok) state[key]=await response.json();} catch(error) {console.warn(`${file} unavailable`,error);}
     }
     $('hero-count').textContent=state.rows.length; $('hero-dated').textContent=state.rows.filter(r=>r.flag_origin_year!==null).length;
+    $('history-summary').insertAdjacentHTML('afterend','<p id="milestone-legend" class="milestone-legend"><span></span> Outlined flags below the years mark documented milestones for flags with unknown origins. They are not creation years and are not counted in the bars. Select one for its source.</p>');
     initColors(); render(); renderHistory(); nextRound();
     ['search','era','scope','match','sort'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',()=>{state.limit=24;render();}));
     $('reset').addEventListener('click',reset); $('empty-reset').addEventListener('click',reset);

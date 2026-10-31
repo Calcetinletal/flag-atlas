@@ -11,7 +11,7 @@ import urllib.request
 ROOT=pathlib.Path(__file__).resolve().parent
 BASE=sys.argv[1].rstrip('/')+'/'
 rows=json.loads((ROOT/'data.json').read_text(encoding='utf-8'))
-files={'index.html','app.js','style.css','data.json','flag_accounts.json','curated_accounts.json','national_flag_creation_years.csv','commons_attribution.json'}
+files={'index.html','app.js','style.css','data.json','flag_accounts.json','curated_accounts.json','documented_milestones.json','national_flag_creation_years.csv','commons_attribution.json'}
 files.update(row['image'] for row in rows if row['image'])
 
 def check(name):

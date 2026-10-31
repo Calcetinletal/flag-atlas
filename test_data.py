@@ -19,9 +19,18 @@ def check(archive):
     output = json.loads((ROOT/'data.json').read_text(encoding='utf-8'))
     accounts = json.loads((ROOT/'flag_accounts.json').read_text(encoding='utf-8'))
     curated = json.loads((ROOT/'curated_accounts.json').read_text(encoding='utf-8'))
+    milestones = json.loads((ROOT/'documented_milestones.json').read_text(encoding='utf-8'))
     assert len(output) == len(source) and len({x['country'] for x in output}) == len(source)
     assert set(accounts) == {x['country'] for x in source}
     assert set(curated).issubset(accounts)
+    originals = {row['country']: row for row in source}
+    for country, record in milestones.items():
+        assert country in originals and not originals[country]['flag_origin_year']
+        assert originals[country]['iso_alpha2'] == record['iso_alpha2']
+        assert type(record['year']) is int and 1000 <= record['year'] <= 2100
+        assert record['kind'] in {'documented_depiction','documented_adoption','documented_regulation','documented_version_change'}
+        assert all(record.get(k) for k in ('description','source','source_name','status'))
+        assert 'not a creation date' in record['status'] and urlparse(record['source']).scheme == 'https'
     with tarfile.open(archive) as tar:
         members = {'/'.join(m.name.split('/')[-2:]):m for m in tar.getmembers() if m.isfile() and m.name.endswith('.json')}
         for original, row in zip(source, output):
@@ -48,6 +57,6 @@ def check(archive):
                 item = curated[row['country']]
                 assert all(item.get(k) for k in ('text','source_name','scope','url'))
                 assert urlparse(item['url']).scheme == 'https'
-    print(f'PASS: {len(source)} CSV rows checked field by field; {len(accounts)} account records checked; {len(curated)} curated records checked; images verified.')
+    print(f'PASS: {len(source)} CSV rows checked field by field; {len(accounts)} account records, {len(curated)} curated records, and {len(milestones)} milestones checked; images verified.')
 
 if __name__ == '__main__': check(sys.argv[1])

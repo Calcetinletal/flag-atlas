@@ -1,0 +1,56 @@
+{
+  "Algeria": {
+    "iso_alpha2": "DZ",
+    "year": 1962,
+    "kind": "documented_adoption",
+    "description": "The provisional government adopted the green-and-white flag with red crescent and star in 1962; its earlier creation date is disputed.",
+    "source": "https://www.ambassade-algerie.ch/exposition_culturelle/medias/encyclotimbreen.pdf",
+    "source_name": "Embassy of Algeria in Switzerland",
+    "status": "documented milestone; not a creation date"
+  },
+  "Denmark": {
+    "iso_alpha2": "DK",
+    "year": 1398,
+    "kind": "documented_depiction",
+    "description": "Dannebrog appears on Erik of Pomerania's royal seal dated 1398. Earlier depictions are approximately dated; this is not its creation year.",
+    "source": "https://danmarkshistorien.lex.dk/Dannebrog",
+    "source_name": "Danmarkshistorien / Lex, historian Stefan Pajung",
+    "status": "documented milestone; not a creation date"
+  },
+  "Japan": {
+    "iso_alpha2": "JP",
+    "year": 1870,
+    "kind": "documented_regulation",
+    "description": "A red-disc-on-white flag was regulated for merchant vessels in 1870. Its proportions differed from the current standard and the design is older.",
+    "source": "https://tile.loc.gov/storage-services/service/ll/llglrdppub/2019670175/2019670175.pdf",
+    "source_name": "US Library of Congress legal report, Japan flag",
+    "status": "documented milestone; related earlier version, not a creation date"
+  },
+  "Malta": {
+    "iso_alpha2": "MT",
+    "year": 1964,
+    "kind": "documented_version_change",
+    "description": "At independence in 1964 the blue panel behind the George Cross was removed. The red-and-white flag has older origins.",
+    "source": "https://komunita.gov.mt/wp-content/uploads/2021/08/Ahna-Maltin.pdf",
+    "source_name": "Maltese government, Aħna Maltin",
+    "status": "documented milestone; current-version change, not a creation date"
+  },
+  "Nepal": {
+    "iso_alpha2": "NP",
+    "year": 1962,
+    "kind": "documented_adoption",
+    "description": "The present construction was adopted with the 1962 constitution; the double-pennant design is older.",
+    "source": "https://radionepalonline.com/en/2025/12/16/421521.html",
+    "source_name": "Radio Nepal, national flag day",
+    "status": "documented milestone; current-version adoption, not a creation date"
+  },
+  "Palestine": {
+    "iso_alpha2": "PS",
+    "year": 1964,
+    "kind": "documented_adoption",
+    "description": "The Palestine Liberation Organization adopted the flag as the flag of the Palestinian people in 1964; the pattern was in use earlier.",
+    "source": "https://www.mofa.pna.ps/en-us/palestine/thepalestinianflag",
+    "source_name": "Palestinian Ministry of Foreign Affairs",
+    "status": "documented milestone; not a creation date"
+  }
+}
