@@ -137,7 +137,8 @@ async function createHistoryPNG(rows,field,interval){
   const milestoneRows=Math.max(0,...bins.map(bin=>bin.milestones.length));
   const milestoneHeight=milestones.length?90+milestoneRows*55:0;
   const milestoneInfoHeight=milestones.length?Math.ceil(milestones.length/3)*34+40:0;
-  const unknownTop=baseline+160+milestoneHeight+milestoneInfoHeight, unknownRowH=58, unknownColumns=4;
+  const unknownTop=baseline+160+milestoneHeight+milestoneInfoHeight, unknownRowH=78, unknownColumns=3;
+  const unknownFlagW=120, unknownFlagH=48;
   const unknownHeight=Math.max(1,Math.ceil(unknown.length/unknownColumns))*unknownRowH;
   canvas.height=unknownTop+100+unknownHeight+115;
   const ctx=canvas.getContext('2d'); if(!ctx) throw new Error('Canvas is unavailable in this browser.');
@@ -176,17 +177,17 @@ async function createHistoryPNG(rows,field,interval){
     ctx.font='20px sans-serif';ctx.fillStyle='#794a39';ctx.textAlign='left';
     milestones.forEach((m,i)=>ctx.fillText(`${m.row.country} ${m.year} · ${kindLabel[m.kind]}`,margin+(i%3)*infoWidth,infoTop+Math.floor(i/3)*34));
   }
-  ctx.textAlign='left'; ctx.fillStyle='#17343b';ctx.font='bold 29px sans-serif';
+  ctx.textAlign='left'; ctx.fillStyle='#17343b';ctx.font='bold 36px sans-serif';
   ctx.fillText(`UNKNOWN ${field==='flag_origin_year'?'ORIGIN':'ADOPTION'} YEAR  ·  ${unknown.length}`,margin,unknownTop);
-  ctx.fillStyle='#526d64';ctx.font='21px sans-serif';ctx.fillText('Included separately because no reliable year is recorded in the supplied dataset.',margin,unknownTop+36);
+  ctx.fillStyle='#526d64';ctx.font='25px sans-serif';ctx.fillText('Included separately because no reliable year is recorded in the supplied dataset.',margin,unknownTop+42);
   const cell=(canvas.width-margin*2)/unknownColumns;
   unknown.forEach((row,i)=>{
-    const x=margin+(i%unknownColumns)*cell,y=unknownTop+58+Math.floor(i/unknownColumns)*unknownRowH;
-    drawFlag(ctx,images.get(row.country),x,y,flagW,flagH);
-    ctx.fillStyle='#17343b';ctx.font='22px sans-serif';
-    let name=row.country; while(name.length>1&&ctx.measureText(name).width>cell-flagW-20) name=name.slice(0,-1);
+    const x=margin+(i%unknownColumns)*cell,y=unknownTop+70+Math.floor(i/unknownColumns)*unknownRowH;
+    drawFlag(ctx,images.get(row.country),x,y,unknownFlagW,unknownFlagH);
+    ctx.fillStyle='#17343b';ctx.font='28px sans-serif';
+    let name=row.country; while(name.length>1&&ctx.measureText(name).width>cell-unknownFlagW-20) name=name.slice(0,-1);
     if(name!==row.country) name=name.trimEnd()+'…';
-    ctx.fillText(name,x+flagW+12,y+22);
+    ctx.fillText(name,x+unknownFlagW+16,y+33);
   });
   const footer=canvas.height-42;
   ctx.fillStyle='#17343b';ctx.font='bold 22px sans-serif';ctx.fillText('FLAG STORIES  ·  @Calcetinletal',margin,footer);

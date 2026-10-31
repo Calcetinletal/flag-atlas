@@ -11,7 +11,7 @@ const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const dom=new JSDOM(html,{url:'http://localhost/',runScripts:'outside-only'});
 const {window}=dom;
 window.fetch=async file=>({ok:true,json:async()=>JSON.parse(fs.readFileSync(path.join(root,file),'utf8'))});
-let drawn=[],texts=[],drawRects=[],actualContext;
+let drawn=[],texts=[],textRecords=[],drawRects=[],actualContext;
 class FileImage extends Image {
   set src(value) {
     this.flagPath=value;
@@ -31,7 +31,7 @@ window.document.createElement=function(tag){
     ctx=new Proxy(actual,{
       get(target,key){
         if(key==='drawImage') return (image,...args)=>{drawn.push(image.flagPath);drawRects.push({path:image.flagPath,args});return target.drawImage(image,...args);};
-        if(key==='fillText') return (text,...args)=>{texts.push(text);return target.fillText(text,...args);};
+        if(key==='fillText') return (text,...args)=>{texts.push(text);textRecords.push({text,font:target.font,x:args[0],y:args[1],width:target.measureText(text).width});return target.fillText(text,...args);};
         const value=target[key];return typeof value==='function'?value.bind(target):value;
       },set(target,key,value){target[key]=value;return true;}
     });return ctx;
@@ -43,7 +43,7 @@ window.eval(fs.readFileSync(path.join(root,'app.js'),'utf8')+'\nwindow.__testCre
 (async()=>{
   await new Promise(resolve=>setTimeout(resolve,30));
   for(const field of ['flag_origin_year','current_adoption_year']) for(const interval of [20,50,100]){
-    drawn=[];texts=[];drawRects=[];
+    drawn=[];texts=[];textRecords=[];drawRects=[];
     const result=await window.__testCreateHistoryPNG(rows,field,interval);
     assert.ok(result.width>=2200 && result.height>=1000);
     const expectedMarkers=field==='flag_origin_year'?Object.keys(milestones):[];
@@ -88,8 +88,17 @@ window.eval(fs.readFileSync(path.join(root,'app.js'),'utf8')+'\nwindow.__testCre
       for(let p=0;p<pixels.length;p+=4) if(pixels[p]<220||pixels[p+1]<220||pixels[p+2]<220){colored=true;break;}
       assert.ok(colored,`${item.path}: image pixels are not blank`);
     }
-    const unknown=rows.filter(r=>r[field]===null);
-    for(const row of unknown) assert.ok(texts.includes(row.country),`${row.country} needs a visible unknown-date label`);
+    const unknown=rows.filter(r=>r[field]===null).sort((a,b)=>a.country.localeCompare(b.country));
+    const unknownDraws=unknown.length?drawRects.slice(-unknown.length):[];
+    unknown.forEach((row,i)=>{
+      const label=textRecords.find(item=>item.text===row.country);
+      assert.ok(label,`${row.country} needs a visible unknown-date label`);
+      assert.match(label.font,/28px/,`${row.country} label must be readable`);
+      assert.equal(unknownDraws[i].path,row.image);
+      assert.ok(unknownDraws[i].args[3]>30,`${row.country} flag must be larger than a plotted flag`);
+      assert.ok(label.x>unknownDraws[i].args[0]+unknownDraws[i].args[2],`${row.country} label must clear its flag`);
+      assert.ok(label.x+label.width<result.width-140,`${row.country} label must stay within the canvas`);
+    });
     assert.ok(texts.includes('@Calcetinletal'));
     assert.ok(texts.some(x=>x.includes('FLAG STORIES')&&x.includes('@Calcetinletal')));
     assert.ok(result.blob.subarray(0,8).equals(Buffer.from('89504e470d0a1a0a','hex')));

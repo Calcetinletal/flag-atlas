@@ -37,3 +37,7 @@ PASS: 205 records, timeline bins and unknown lists, filters, details and quiz te
 ```
 
 Current milestone and export checks: `python3 test_data.py /tmp/flag_factbook.tar.gz` checked all 205 CSV rows, 205 accounts, 11 curated stories and six milestone records. `node test_site.cjs /tmp/flag-atlas-test/node_modules/jsdom` passed the interactive checks. `node test_export.cjs /tmp/flag-atlas-test/node_modules/jsdom /tmp/flag-atlas-test/node_modules/@napi-rs/canvas /tmp/flag_atlas_milestones_clean.png` passed all six modes, verifying 205 base flags, the six separate origin-mode markers, positional checks, named unknowns, watermark, invalid inputs, transparent padding and the programmatic download path.
+
+## Larger unknown-year labels — 31 October 2026
+
+The downloadable PNG's unknown-year section uses larger flag frames (120 × 48 px instead of 80 × 30 px), larger names and heading, and three columns. The original flag proportions remain intact. The default 20-year PNG is now 4,120 × 3,191 px; its bottom section was visually inspected. `test_export.cjs` checked all six date/interval settings, every flag and milestone, unknown-name size and placement, watermark, invalid inputs and the download-button path using jsdom and a real canvas renderer. `test_chart_unchanged.py` compared all 4,120 × 2,697 pixels above the unknown-year section with the prior 20-year origin export: they are identical. The actual browser download flow was not verified because browser access was unavailable.
