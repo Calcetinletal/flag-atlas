@@ -47,6 +47,9 @@ function checkTimeline(field, width){
   assert.deepEqual(errors,[]);
   assert.equal(displayedCount(),rows.length);
   assert.equal(Number($('hero-count').textContent),rows.length);
+  const sectionLinks=[...doc.querySelectorAll('nav.ticker a')];
+  assert.deepEqual(sectionLinks.map(link=>link.getAttribute('href')),['#explore','#palette-lab','#flag-network','#flag-timeline','#game','#about']);
+  for(const link of sectionLinks)assert.ok(doc.querySelector(link.getAttribute('href')),`Missing section for ${link.textContent}`);
   checkTimeline('flag_origin_year',20);
   const denmark=doc.querySelector('#undated-list [data-country="Denmark"]');
   assert.ok(denmark, 'Denmark must be visible among undated flags');
