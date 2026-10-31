@@ -42,10 +42,10 @@ window.document.createElement=function(tag){
 window.eval(fs.readFileSync(path.join(root,'app.js'),'utf8')+'\nwindow.__testCreateHistoryPNG = createHistoryPNG; window.__testCheckedMilestones = checkedMilestones; window.__testDrawFlag = drawFlag;');
 (async()=>{
   await new Promise(resolve=>setTimeout(resolve,30));
-  for(const field of ['flag_origin_year','current_adoption_year']) for(const interval of [20,50,100]){
+  for(const field of ['flag_origin_year','current_adoption_year']) for(const interval of [20,50,100]) for(const spacing of ['compact','linear']){
     drawn=[];texts=[];textRecords=[];drawRects=[];
-    const result=await window.__testCreateHistoryPNG(rows,field,interval);
-    assert.ok(result.width>=2200 && result.height>=1000);
+    const result=await window.__testCreateHistoryPNG(rows,field,interval,spacing);
+    assert.ok(result.width>=2800 && result.height>=1000);
     const expectedMarkers=field==='flag_origin_year'?Object.keys(milestones):[];
     const byCountry=new Map(rows.map(r=>[r.country,r]));
     const expectedImages=rows.map(r=>r.image).concat(expectedMarkers.map(name=>byCountry.get(name).image));
@@ -54,28 +54,33 @@ window.eval(fs.readFileSync(path.join(root,'app.js'),'utf8')+'\nwindow.__testCre
     const dates=dated.map(r=>r[field]).concat(expectedMarkers.map(name=>milestones[name].year));
     const first=Math.floor(Math.min(...dates)/interval)*interval;
     const last=Math.floor(Math.max(...dates)/interval)*interval;
-    const binCount=(last-first)/interval+1;
-    const colWidth=Math.max(96,Math.floor((2200-280)/binCount));
+    const binStarts=spacing==='compact'?[...new Set(dates.map(year=>Math.floor(year/interval)*interval))].sort((a,b)=>a-b):Array.from({length:(last-first)/interval+1},(_,i)=>first+i*interval);
+    const binCount=binStarts.length;
+    const colWidth=Math.max(150,Math.floor((2800-300)/binCount));
     const counts=new Map();
     for(const r of dated){const b=Math.floor(r[field]/interval)*interval;counts.set(b,(counts.get(b)||0)+1);}
-    const baseline=490+Math.max(...counts.values())*36+54;
+    const plotHeight=Math.max(1450,Math.max(...counts.values())*45+70);
+    const firstTall=binStarts.findIndex(start=>counts.has(start)&&plotHeight-counts.get(start)*45<1250);
+    const firstTallX=firstTall<0?result.width-150:150+firstTall*colWidth+(colWidth-100)/2;
+    const internal=Math.min(result.width*.62,firstTallX-230-45)>=650;
+    const plotTop=internal?140:1350,baseline=plotTop+plotHeight;
     const byImage=new Map(rows.map(r=>[r.image,r]));
     for(const item of drawRects){
       const row=byImage.get(item.path);
       if(row[field]===null) continue;
       const center=item.args[0]+item.args[2]/2;
-      const expectedCenter=140+(Math.floor(row[field]/interval)*interval-first)/interval*colWidth+colWidth/2;
+      const expectedCenter=150+binStarts.indexOf(Math.floor(row[field]/interval)*interval)*colWidth+colWidth/2;
       assert.ok(Math.abs(center-expectedCenter)<.01,`${row.country} drawn in the wrong date interval`);
       const group=dated.filter(r=>Math.floor(r[field]/interval)===Math.floor(row[field]/interval)).sort((a,b)=>a[field]-b[field]||a.country.localeCompare(b.country));
-      const expectedTop=baseline-(group.findIndex(r=>r.country===row.country)+1)*36;
-      assert.ok(item.args[1]>=expectedTop-.01 && item.args[1]+item.args[3]<=expectedTop+30.01,`${row.country} drawn at the wrong height`);
+      const expectedTop=baseline-(group.findIndex(r=>r.country===row.country)+1)*45;
+      assert.ok(item.args[1]>=expectedTop-.01 && item.args[1]+item.args[3]<=expectedTop+38.01,`${row.country} drawn at the wrong height`);
     }
     for(const name of expectedMarkers){
       const row=byCountry.get(name), marker=milestones[name];
-      const markerCenter=140+(Math.floor(marker.year/interval)*interval-first)/interval*colWidth+colWidth/2;
+      const markerCenter=150+binStarts.indexOf(Math.floor(marker.year/interval)*interval)*colWidth+colWidth/2;
       const group=Object.entries(milestones).filter(([,m])=>Math.floor(m.year/interval)===Math.floor(marker.year/interval)).sort((a,b)=>a[1].year-b[1].year||a[0].localeCompare(b[0]));
-      const markerTop=baseline+112+group.findIndex(([country])=>country===name)*76;
-      const matching=drawRects.filter(item=>item.path===row.image && Math.abs(item.args[0]+item.args[2]/2-markerCenter)<.01 && item.args[1]>=markerTop-.01 && item.args[1]+item.args[3]<=markerTop+42.01);
+      const markerTop=baseline+135+group.findIndex(([country])=>country===name)*92;
+      const matching=drawRects.filter(item=>item.path===row.image && Math.abs(item.args[0]+item.args[2]/2-markerCenter)<.01 && item.args[1]>=markerTop-.01 && item.args[1]+item.args[3]<=markerTop+48.01);
       assert.ok(matching.length,`${name} documented milestone drawn in the wrong interval`);
       assert.ok(texts.includes(String(marker.year)),`${name} milestone year missing`);
     }
@@ -93,26 +98,44 @@ window.eval(fs.readFileSync(path.join(root,'app.js'),'utf8')+'\nwindow.__testCre
     unknown.forEach((row,i)=>{
       const label=textRecords.find(item=>item.text===row.country);
       assert.ok(label,`${row.country} needs a visible unknown-date label`);
-      assert.match(label.font,/44px/,`${row.country} label must be readable`);
+      assert.match(label.font,/52px/,`${row.country} label must be readable`);
       assert.equal(unknownDraws[i].path,row.image);
       assert.ok(unknownDraws[i].args[3]>48,`${row.country} flag must be larger than before`);
       assert.ok(label.x>unknownDraws[i].args[0]+unknownDraws[i].args[2],`${row.country} label must clear its flag`);
-      assert.ok(label.x+label.width<result.width-140,`${row.country} label must stay within the canvas`);
+      assert.ok(label.x+label.width<result.width-150,`${row.country} label must stay within the canvas`);
     });
     assert.ok(texts.includes('@Calcetinletal'));
-    const title=textRecords.find(item=>item.text===(field==='flag_origin_year'?'The origins of flags':'When current flags were adopted'));
-    const subtitle=textRecords.find(item=>item.text.includes('dated flags ·'));
+    assert.deepEqual(binStarts.map(String),textRecords.filter(item=>item.font==='34px sans-serif'&&/^\d{4}$/.test(item.text)).map(item=>item.text));
+    const gaps=binStarts.filter((start,i)=>i>0&&start-binStarts[i-1]>interval).length;
+    assert.equal(texts.filter(text=>text==='//').length,spacing==='compact'?gaps:0);
+    assert.ok(texts.join(' ').includes(spacing==='compact'?'empty intervals omitted':'spacing is linear'));
+    const title=textRecords.filter(item=>item.font.includes('132px'));
+    const subtitle=textRecords.filter(item=>item.font.includes('50px'));
     const unknownHeading=textRecords.find(item=>item.text.startsWith('UNKNOWN '));
-    assert.match(title.font,/92px/);assert.ok(title.x+title.width<=result.width-140,'title must fit');
-    assert.match(subtitle.font,/40px/);assert.ok(subtitle.x+subtitle.width<=result.width-140,'subtitle must fit');
-    assert.match(unknownHeading.font,/52px/);assert.ok(unknownHeading.x+unknownHeading.width<=result.width-140,'unknown heading must fit');
+    assert.equal(title.map(item=>item.text).join(' '),field==='flag_origin_year'?'The origins of flags':'When current flags were adopted');
+    assert.ok(title.every(item=>item.x+item.width<=result.width-150),'title must fit');
+    assert.ok(subtitle.length&&subtitle.every(item=>item.x+item.width<=result.width-150),'subtitle must fit');
+    assert.match(unknownHeading.font,/60px/);assert.ok(unknownHeading.x+unknownHeading.width<=result.width-150,'unknown heading must fit');
+    assert.ok(!internal||title.every(item=>item.y>plotTop&&item.y<baseline),'title must appear inside the plot when room permits');
+    const headerLines=textRecords.filter(item=>item.x===230&&item.y<(internal?plotTop+1235:1265));
+    for(const text of headerLines)for(const item of drawRects.filter(item=>byImage.get(item.path)[field]!==null)){
+      const [x,y,w,h]=item.args,size=Number((text.font.match(/(\d+)px/)||[])[1]||0);
+      assert.ok(text.x+text.width<=x||text.x>=x+w||text.y<=y||text.y-size>=y+h,`title text overlaps ${item.path}`);
+    }
     assert.ok(texts.some(x=>x.includes('FLAG STORIES')&&x.includes('@Calcetinletal')));
     assert.ok(result.blob.subarray(0,8).equals(Buffer.from('89504e470d0a1a0a','hex')));
-    if(field==='flag_origin_year' && interval===20 && process.argv[4]) fs.writeFileSync(process.argv[4],result.blob);
-    console.log(`PASS ${field} ${interval}: ${result.width}x${result.height}, ${rows.length} flags, ${expectedMarkers.length} separate milestones, ${unknown.length} named unknowns, watermark`);
+    if(field==='flag_origin_year' && interval===20 && spacing==='compact' && process.argv[4]) fs.writeFileSync(process.argv[4],result.blob);
+    if(process.argv[5]) fs.writeFileSync(process.argv[5]+'-'+field+'-'+interval+'-'+spacing+'.png',result.blob);
+    console.log(`PASS ${field} ${interval} ${spacing}: ${result.width}x${result.height}, ${rows.length} flags, ${expectedMarkers.length} separate milestones, ${unknown.length} named unknowns, watermark`);
   }
   const invalid=rows.map((r,i)=>i===0?{...r,image:'flags/not-present.png'}:r);
+  // A very tall early stack forces the title out of the plot rather than over data.
+  const crowded=rows.filter(row=>row.current_adoption_year!==null).slice(0,36).map((row,i)=>({...row,current_adoption_year:i===35?2200:1800}));
+  textRecords=[];const fallbackExport=await window.__testCreateHistoryPNG(crowded,'current_adoption_year',20);
+  const fallbackTitle=textRecords.filter(item=>item.font.includes('132px'));
+  assert.ok(fallbackExport.blob.length>8&&fallbackTitle.every(item=>item.y<1350),'dense early stack must use a safe header');
   await assert.rejects(window.__testCreateHistoryPNG(invalid,'flag_origin_year',20),/Could not load the flag/);
+  await assert.rejects(window.__testCreateHistoryPNG(rows,'flag_origin_year',20,'invalid'),/Invalid time-axis spacing/);
   console.log('PASS: missing image rejects export rather than silently omitting a flag');
   assert.throws(()=>window.__testCheckedMilestones(rows,{Denmark:{...milestones.Denmark,iso_alpha2:'XX'}}),/Invalid documented milestone/);
   assert.throws(()=>window.__testCheckedMilestones(rows,{Denmark:{...milestones.Denmark,year:null}}),/Invalid documented milestone/);
@@ -137,6 +160,10 @@ window.eval(fs.readFileSync(path.join(root,'app.js'),'utf8')+'\nwindow.__testCre
   for(let i=0;i<100&&!downloadedName;i++) await new Promise(resolve=>setTimeout(resolve,50));
   assert.equal(downloadedName,'flag-stories-origins-20y.png');
   assert.match(window.document.getElementById('download-status').textContent,/Downloaded/);
+  downloadedName='';window.document.getElementById('history-spacing').value='linear';
+  window.document.getElementById('download-history').click();
+  for(let i=0;i<100&&!downloadedName;i++)await new Promise(resolve=>setTimeout(resolve,50));
+  assert.equal(downloadedName,'flag-stories-origins-20y-linear.png');
   console.log('PASS: download button creates the expected PNG and confirms completion');
   window.close();
 })().catch(e=>{console.error(e);process.exitCode=1;window.close();});

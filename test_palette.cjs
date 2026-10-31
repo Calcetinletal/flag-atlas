@@ -5,6 +5,7 @@ const path=require('node:path');
 const {JSDOM,VirtualConsole}=require(process.argv[2]);
 const root=__dirname;
 const rows=JSON.parse(fs.readFileSync(path.join(root,'data.json')));
+const geography=JSON.parse(fs.readFileSync(path.join(root,'geography_m49.json'))).by_iso_alpha2;
 const colorNames=['red','blue','green','yellow','black','white','orange','purple','brown'];
 const errors=[],consoleSpy=new VirtualConsole();
 consoleSpy.on('jsdomError',e=>errors.push(e.message));consoleSpy.on('error',(...e)=>errors.push(e.join(' ')));
@@ -24,12 +25,12 @@ window.cancelAnimationFrame=id=>pendingFrames.delete(id);
 function mask(row){if(!Array.isArray(row.colors)||!row.colors.length||row.colors.some(c=>!colorNames.includes(c)))return 0;return row.colors.reduce((m,c)=>m|(1<<colorNames.indexOf(c)),0);}
 function bitCount(value){let count=0;while(value){value&=value-1;count++;}return count;}
 function expectedScore(a,b){const union=mask(a)|mask(b);return union?bitCount(mask(a)&mask(b))/bitCount(union):0;}
-function expectedMatches(focus){return rows.filter(row=>row.country!==focus.country&&mask(row)).map(row=>({row,score:expectedScore(focus,row)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.row.country.localeCompare(b.row.country)).slice(0,8);}
+function expectedMatches(focus,scope=rows){return scope.filter(row=>row.country!==focus.country&&mask(row)).map(row=>({row,score:expectedScore(focus,row)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.row.country.localeCompare(b.row.country)).slice(0,8);}
 function checkGraph(focus){
   const nodes=[...doc.querySelectorAll('#network-graph .network-node')];
   assert.equal(nodes.length,rows.length);
   assert.deepEqual(nodes.filter(node=>node.classList.contains('selected')).map(node=>node.dataset.network),[focus.country]);
-  assert.deepEqual([...doc.querySelectorAll('#network-graph .network-edge.selected')].map(line=>line.dataset.a+'|'+line.dataset.b),[...doc.querySelectorAll('#network-graph .network-edge')].filter(line=>line.dataset.a===focus.country||line.dataset.b===focus.country).map(line=>line.dataset.a+'|'+line.dataset.b));
+  assert.deepEqual([...doc.querySelectorAll('#network-graph .network-edge.highlighted')].map(line=>line.dataset.a+'|'+line.dataset.b),[...doc.querySelectorAll('#network-graph .network-edge')].filter(line=>line.dataset.a===focus.country||line.dataset.b===focus.country).map(line=>line.dataset.a+'|'+line.dataset.b));
   assert.deepEqual([...doc.querySelectorAll('#twins-list .twin-card')].map(card=>card.dataset.network),expectedMatches(focus).map(m=>m.row.country));
 }
 (async()=>{
@@ -44,11 +45,11 @@ function checkGraph(focus){
   assert.equal(doc.querySelectorAll('#network-select option').length,rows.length);
   const graphNodes=[...doc.querySelectorAll('#network-graph .network-node')];
   assert.deepEqual(graphNodes.map(node=>node.dataset.network).sort(),rows.map(row=>row.country).sort());
-  function verifyEdges(mode){
+  function verifyEdges(mode,subset=rows){
     const actual=[...doc.querySelectorAll('#network-graph .network-edge')],expected=new Map();
     const score=(a,b)=>mode==='year'?(Number.isInteger(a.flag_origin_year)&&Number.isInteger(b.flag_origin_year)?1/(1+Math.abs(a.flag_origin_year-b.flag_origin_year)/50):0):expectedScore(a,b);
-    for(const row of rows){
-      const nearest=rows.filter(other=>other.country!==row.country).map(other=>({other,score:score(row,other)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.other.country.localeCompare(b.other.country)).slice(0,2);
+    for(const row of subset){
+      const nearest=subset.filter(other=>other.country!==row.country).map(other=>({other,score:score(row,other)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.other.country.localeCompare(b.other.country)).slice(0,2);
       for(const item of nearest){const key=[row.country,item.other.country].sort().join('|');expected.set(key,item.score);}
     }
     assert.equal(actual.length,expected.size);
@@ -129,14 +130,65 @@ function checkGraph(focus){
   const initial=eligible.find(row=>expectedMatches(row).length>0);$('network-select').value=initial.country;$('network-select').dispatchEvent(new window.Event('change',{bubbles:true}));
   const neighbor=[...doc.querySelectorAll('#network-graph [data-network]')].find(node=>node.dataset.network!==initial.country),neighborName=neighbor.dataset.network;neighbor.click();
   assert.equal($('network-select').value,neighborName);checkGraph(rows.find(r=>r.country===neighborName));
+  const hovered=[...doc.querySelectorAll('#network-graph [data-network]')].find(node=>node.dataset.network!==neighborName),hoverName=hovered.dataset.network;
+  hovered.dispatchEvent(new window.MouseEvent('pointerover',{bubbles:true}));
+  const direct=[...doc.querySelectorAll('#network-graph .network-edge')].filter(line=>line.dataset.a===hoverName||line.dataset.b===hoverName);
+  const directNames=new Set(direct.map(line=>line.dataset.a===hoverName?line.dataset.b:line.dataset.a));
+  assert.deepEqual([...doc.querySelectorAll('#network-graph .network-node.neighbor')].map(node=>node.dataset.network).sort(),[...directNames].sort());
+  assert.equal(doc.querySelectorAll('#network-graph .network-edge.highlighted').length,direct.length);
+  hovered.dispatchEvent(new window.MouseEvent('pointerout',{bubbles:true}));checkGraph(rows.find(r=>r.country===neighborName));
+  const allEdges=[...doc.querySelectorAll('#network-graph .network-edge')];
+  for(const node of doc.querySelectorAll('#network-graph .network-node')){
+    const name=node.dataset.network,expected=allEdges.filter(edge=>edge.dataset.a===name||edge.dataset.b===name);
+    node.dispatchEvent(new window.MouseEvent('pointerover',{bubbles:true}));
+    const got=[...doc.querySelectorAll('#network-graph .network-edge.highlighted')];
+    assert.deepEqual(got,expected,name+' hover highlights exactly its direct links');
+    const expectedNeighbors=new Set(expected.map(edge=>edge.dataset.a===name?edge.dataset.b:edge.dataset.a));
+    assert.deepEqual([...doc.querySelectorAll('#network-graph .network-node.neighbor')].map(item=>item.dataset.network).sort(),[...expectedNeighbors].sort(),name+' hover neighbors');
+  }
+  hovered.dispatchEvent(new window.FocusEvent('focusin',{bubbles:true}));assert.equal(doc.querySelector('.highlight-target').dataset.network,hoverName);
+  hovered.dispatchEvent(new window.FocusEvent('focusout',{bubbles:true}));checkGraph(rows.find(r=>r.country===neighborName));
+  $('network-links').value='all';$('network-links').dispatchEvent(new window.Event('change',{bubbles:true}));assert.ok($('network-graph').classList.contains('show-all-links'));
+  $('network-links').value='focus';$('network-links').dispatchEvent(new window.Event('change',{bubbles:true}));assert.ok(!$('network-graph').classList.contains('show-all-links'));
   $('network-details').click();assert.ok($('details').open);assert.match($('detail-content').textContent,new RegExp(neighborName.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')));$('close-dialog').click();
   const twin=doc.querySelector('#twins-list [data-network]'),twinName=twin.dataset.network;twin.click();
   assert.equal($('network-select').value,twinName);checkGraph(rows.find(r=>r.country===twinName));
+  const regions=[...$('network-region').options].map(option=>option.value);
+  for(const region of regions){
+    $('network-region').value=region;$('network-region').dispatchEvent(new window.Event('change',{bubbles:true}));
+    const subset=rows.filter(row=>region==='all'||(region==='unclassified'?!geography[row.iso_alpha2]:geography[row.iso_alpha2]?.region===region));
+    assert.deepEqual([...doc.querySelectorAll('#network-graph .network-node')].map(node=>node.dataset.network).sort(),subset.map(row=>row.country).sort(),region);
+    verifyEdges('color',subset);
+    const subregions=[...$('network-subregion').options].map(option=>option.value);
+    for(const sub of subregions.filter(value=>value!=='all')){
+      $('network-subregion').value=sub;$('network-subregion').dispatchEvent(new window.Event('change',{bubbles:true}));
+      const narrowed=subset.filter(row=>geography[row.iso_alpha2]?.subregion===sub);
+      assert.deepEqual([...doc.querySelectorAll('#network-graph .network-node')].map(node=>node.dataset.network).sort(),narrowed.map(row=>row.country).sort(),region+' / '+sub);
+      verifyEdges('color',narrowed);
+      const focus=narrowed.find(row=>row.country===$('network-select').value);
+      assert.deepEqual([...doc.querySelectorAll('#twins-list .twin-card')].map(card=>card.dataset.network),expectedMatches(focus,narrowed).map(match=>match.row.country));
+    }
+  }
+  $('network-region').value='Asia';$('network-region').dispatchEvent(new window.Event('change',{bubbles:true}));
+  $('network-subregion').value='Eastern Asia';$('network-subregion').dispatchEvent(new window.Event('change',{bubbles:true}));
+  $('network-mode').value='year';$('network-mode').dispatchEvent(new window.Event('change',{bubbles:true}));
+  const eastAsia=rows.filter(row=>geography[row.iso_alpha2]?.region==='Asia'&&geography[row.iso_alpha2]?.subregion==='Eastern Asia');
+  assert.deepEqual([...doc.querySelectorAll('#network-graph .network-node')].map(node=>node.dataset.network).sort(),eastAsia.map(row=>row.country).sort());verifyEdges('year',eastAsia);
+  $('network-mode').value='color';$('network-mode').dispatchEvent(new window.Event('change',{bubbles:true}));
+  $('network-region').value='all';$('network-region').dispatchEvent(new window.Event('change',{bubbles:true}));
   const combo=doc.querySelector('.combo-card'),colors=combo.dataset.colors.split(','),combinationMask=mask({colors});combo.click();
   assert.equal($('match').value,'exact');assert.equal(Number($('result-count').textContent),eligible.filter(row=>mask(row)===combinationMask).length);
   for(const color of colorNames) assert.equal(doc.querySelector(`[data-color="${color}"]`).getAttribute('aria-pressed'),String(colors.includes(color)));
   assert.match(doc.querySelector('.network-disclaimer').textContent,/not evidence of shared origin/);
   assert.deepEqual(errors,[]);
+  const fallback=new JSDOM(fs.readFileSync(path.join(root,'index.html'),'utf8'),{url:'http://localhost/',runScripts:'outside-only',beforeParse(w){
+    w.fetch=async file=>file==='geography_m49.json'?{ok:false}:{ok:true,json:async()=>JSON.parse(fs.readFileSync(path.join(root,file),'utf8'))};
+    w.console.warn=()=>{};w.HTMLDialogElement.prototype.showModal=function(){this.open=true;};w.HTMLDialogElement.prototype.close=function(){this.open=false;};
+  }});
+  fallback.window.eval(fs.readFileSync(path.join(root,'app.js'),'utf8'));await new Promise(resolve=>fallback.window.setTimeout(resolve,35));
+  assert.match(fallback.window.document.querySelector('.network-geography-note').textContent,/unavailable/);
+  assert.equal(fallback.window.document.querySelectorAll('#network-graph .network-node').length,rows.length);
+  assert.ok([...fallback.window.document.querySelectorAll('#network-region option')].some(option=>option.value==='unclassified'));fallback.window.close();
   console.log(`PASS: ${rows.length} moving flag nodes, color and year links, simulated grouping, unknown years, zoom, ${eligible.length*eligible.length} color scores, ranked neighbors and interactions.`);
   window.close();
 })().catch(e=>{console.error(e);process.exitCode=1;window.close();});

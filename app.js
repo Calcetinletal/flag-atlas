@@ -189,11 +189,29 @@ function setNetworkZoom(value){
   $('network-graph').style.transform='scale('+state.networkZoom+')';
   $('network-zoom-label').textContent=Math.round(state.networkZoom*100)+'%';
 }
+function networkGeography(row){
+  return state.geography?.[row.iso_alpha2] || null;
+}
+function initNetworkRegions(){
+  const regions=[...new Set(state.rows.map(row=>networkGeography(row)?.region).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+  $('network-region').innerHTML='<option value="all">All regions</option>'+regions.map(region=>'<option value="'+escapeHTML(region)+'">'+escapeHTML(region)+'</option>').join('')+(state.rows.some(row=>!networkGeography(row))?'<option value="unclassified">Unclassified</option>':'');
+  updateNetworkSubregions();
+}
+function updateNetworkSubregions(){
+  const region=$('network-region').value,select=$('network-subregion');
+  const subs=[...new Set(state.rows.map(networkGeography).filter(geo=>geo&&(region==='all'||geo.region===region)).map(geo=>geo.subregion).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+  select.innerHTML='<option value="all">All subregions</option>'+subs.map(sub=>'<option value="'+escapeHTML(sub)+'">'+escapeHTML(sub)+'</option>').join('');
+  select.disabled=region==='unclassified'||!subs.length;
+}
+function networkRows(){
+  const region=$('network-region').value,subregion=$('network-subregion').value;
+  return state.rows.filter(row=>{
+    const geo=networkGeography(row);
+    return (region==='all'||(region==='unclassified'?!geo:geo?.region===region))&&(subregion==='all'||geo?.subregion===subregion);
+  });
+}
 function initNetwork(){
-  const ordered=state.rows.slice().sort((a,b)=>a.country.localeCompare(b.country));
-  $('network-select').innerHTML=ordered.map(row=>'<option value="'+escapeHTML(row.country)+'">'+escapeHTML(row.country)+'</option>').join('');
-  if(!ordered.length){$('network-graph').textContent='No flags are available.';return;}
-  $('network-select').value=ordered[0].country;state.networkZoom=.75;
+  initNetworkRegions();state.networkZoom=.75;state.networkPinned=null;
   createNetwork('color');
   if(window.IntersectionObserver){
     const observer=new IntersectionObserver(entries=>{if(entries.some(entry=>entry.isIntersecting))animateNetwork();},{threshold:.15});
@@ -203,27 +221,50 @@ function initNetwork(){
 function createNetwork(mode){
   const previous=state.network?new Map(state.network.nodes.map(node=>[node.row.country,node])):null;
   if(state.network?.frameHandle && window.cancelAnimationFrame)window.cancelAnimationFrame(state.network.frameHandle);
-  const graph=buildNetwork(state.rows,mode,previous);state.network=graph;
+  const rows=networkRows(),graph=buildNetwork(rows,mode,previous);state.network=graph;
+  const select=$('network-select'),prior=select.value;
+  select.innerHTML=graph.rows.map(row=>'<option value="'+escapeHTML(row.country)+'">'+escapeHTML(row.country)+'</option>').join('');
+  select.disabled=!graph.rows.length;
+  if(!graph.rows.some(row=>row.country===prior))state.networkPinned=null;
+  select.value=graph.rows.some(row=>row.country===prior)?prior:(graph.rows[0]?.country||'');
   const container=$('network-graph');
+  if(!graph.rows.length){container.innerHTML='<p class="network-empty">No flags match this region.</p>';$('network-count').textContent='0 flags';$('twins-list').innerHTML='';return;}
   container.style.width=graph.width+'px';container.style.height=graph.height+'px';
   const lines=graph.edges.map(edge=>'<line class="network-edge" data-a="'+escapeHTML(graph.rows[edge.a].country)+'" data-b="'+escapeHTML(graph.rows[edge.b].country)+'" data-score="'+edge.score+'"/>').join('');
   const nodes=graph.nodes.map(node=>'<button type="button" class="network-node'+(node.known?'':' unavailable')+'" data-network="'+escapeHTML(node.row.country)+'" title="'+escapeHTML(node.row.country+' · origin '+yearText(node.row)+' · colors: '+(detectedColors(node.row).join(', ')||'unavailable'))+'" aria-label="Explore '+escapeHTML(node.row.country)+', origin '+escapeHTML(yearText(node.row))+'" aria-pressed="false"><span class="network-flag">'+imageHTML(node.row)+'</span><span class="network-name">'+escapeHTML(node.row.country)+'</span></button>').join('');
   container.innerHTML='<svg class="network-lines" viewBox="0 0 '+graph.width+' '+graph.height+'" aria-hidden="true">'+lines+'</svg>'+(graph.unknown?'<div class="network-unknown-label">'+(mode==='year'?'ORIGIN YEAR UNKNOWN':'COLOR DATA UNAVAILABLE')+' · '+graph.unknown+'</div>':'')+nodes;
   graph.nodeElements=[...container.querySelectorAll('.network-node')];graph.edgeElements=[...container.querySelectorAll('.network-edge')];
-  setNetworkZoom(state.networkZoom);drawNetwork();renderNetwork();animateNetwork();
+  setNetworkZoom(state.networkZoom);drawNetwork();renderNetwork();highlightNetwork(state.networkPinned);animateNetwork();
 }
 function renderNetwork(){
-  const graph=state.network,focus=state.rows.find(row=>row.country===$('network-select').value);
+  const graph=state.network,focus=graph?.rows.find(row=>row.country===$('network-select').value);
   if(!focus||!graph)return;
   const mode=graph.mode;
-  const matches=mode==='color'?closestPalettes(state.rows,focus):(!Number.isInteger(focus.flag_origin_year)?[]:state.rows.filter(row=>row.country!==focus.country&&Number.isInteger(row.flag_origin_year)).map(row=>({row,difference:Math.abs(row.flag_origin_year-focus.flag_origin_year)})).sort((a,b)=>a.difference-b.difference||a.row.country.localeCompare(b.row.country)).slice(0,NETWORK_LIMIT));
+  const matches=mode==='color'?closestPalettes(graph.rows,focus):(!Number.isInteger(focus.flag_origin_year)?[]:graph.rows.filter(row=>row.country!==focus.country&&Number.isInteger(row.flag_origin_year)).map(row=>({row,difference:Math.abs(row.flag_origin_year-focus.flag_origin_year)})).sort((a,b)=>a.difference-b.difference||a.row.country.localeCompare(b.row.country)).slice(0,NETWORK_LIMIT));
   $('network-title').textContent=mode==='year'?'A network of origin years':'A network of flag colors';
   $('network-count').textContent=graph.rows.length+' flags · '+graph.edges.length+' links';
   $('network-method').textContent=mode==='year'?'Closer recorded origin years pull together; the layout also favors older flags to the left. Pairwise gaps above 400 years are capped; unknown years appear separately.':'Color similarity uses shared detected colors divided by all detected colors in both flags.';
   $('twins-explainer').textContent=mode==='year'?'Ranked by the absolute difference in recorded origin years.':'Score = shared colors ÷ all distinct colors across both flags.';
   graph.nodeElements.forEach(node=>{const selected=node.dataset.network===focus.country;node.classList.toggle('selected',selected);node.setAttribute('aria-pressed',String(selected));});
-  graph.edgeElements.forEach(line=>line.classList.toggle('selected',line.dataset.a===focus.country||line.dataset.b===focus.country));
   $('twins-list').innerHTML=matches.map(m=>'<button type="button" class="twin-card" data-network="'+escapeHTML(m.row.country)+'"><span class="twin-flag">'+imageHTML(m.row)+'</span><span class="twin-copy"><strong>'+escapeHTML(m.row.country)+'</strong><small>Origin: '+yearText(m.row)+'</small><span>'+(mode==='year'?'Recorded origin':'Shared: '+escapeHTML(m.shared.join(', ')))+'</span></span><b>'+(mode==='year'?m.difference+'<small> yr</small>':Math.round(m.score*100)+'<small>%</small>')+'</b></button>').join('') || '<p>No comparable '+(mode==='year'?'origin year':'detected colors')+' available for this flag.</p>';
+}
+function highlightNetwork(name){
+  const graph=state.network;if(!graph?.nodeElements)return;
+  const neighbors=new Set();
+  graph.edgeElements.forEach(line=>{
+    const active=!!name&&(line.dataset.a===name||line.dataset.b===name);
+    line.classList.toggle('highlighted',active);
+    if(active)neighbors.add(line.dataset.a===name?line.dataset.b:line.dataset.a);
+  });
+  graph.nodeElements.forEach(node=>{node.classList.toggle('neighbor',neighbors.has(node.dataset.network));node.classList.toggle('highlight-target',node.dataset.network===name);});
+  $('network-graph').classList.toggle('has-highlight',!!name);
+}
+function initNetworkHighlight(){
+  const container=$('network-graph');
+  container.addEventListener('pointerover',event=>{const node=event.target.closest('[data-network]');if(node)highlightNetwork(node.dataset.network);});
+  container.addEventListener('pointerout',event=>{const node=event.target.closest('[data-network]');if(node&&!node.contains(event.relatedTarget))highlightNetwork(state.networkPinned);});
+  container.addEventListener('focusin',event=>{const node=event.target.closest('[data-network]');if(node)highlightNetwork(node.dataset.network);});
+  container.addEventListener('focusout',event=>{const node=event.target.closest('[data-network]');if(node&&!node.contains(event.relatedTarget))highlightNetwork(state.networkPinned);});
 }
 function revealNetworkSelection(){
   const node=state.network?.nodes.find(item=>item.row.country===$('network-select').value),scroll=document.querySelector('.network-scroll');
@@ -313,86 +354,104 @@ function drawFlag(ctx,img,x,y,width,height){
   ctx.strokeStyle='#aab9af'; ctx.lineWidth=1; ctx.strokeRect(left+.5,top+.5,Math.max(0,w-1),Math.max(0,h-1));
 }
 
-async function createHistoryPNG(rows,field,interval){
-  const {dated,unknown,milestones,bins,max}=historyData(rows,field,interval);
+function wrapCanvasText(ctx,text,maxWidth){
+  const words=text.split(/\s+/),lines=[];let line='';
+  for(const word of words){const next=line?line+' '+word:word;if(line&&ctx.measureText(next).width>maxWidth){lines.push(line);line=word;}else line=next;}
+  if(line)lines.push(line);return lines;
+}
+async function createHistoryPNG(rows,field,interval,spacing='compact'){
+  const {dated,unknown,milestones,bins:allBins,max}=historyData(rows,field,interval);
   if(!dated.length) throw new Error('There are no dated flags for this measure.');
+  if(!['compact','linear'].includes(spacing))throw new Error('Invalid time-axis spacing.');
+  const bins=spacing==='compact'?allBins.filter(bin=>bin.rows.length||bin.milestones.length):allBins;
   const images=new Map(await Promise.all(rows.map(loadFlagImage)));
-  const margin=140, columnWidth=Math.max(96,Math.floor((2200-2*margin)/bins.length)), flagW=80, flagH=30, rowH=36;
+  const margin=150,columnWidth=Math.max(150,Math.floor((2800-2*margin)/bins.length)),flagW=100,flagH=38,rowH=45;
   const canvas=document.createElement('canvas');
-  canvas.width=Math.max(2200,margin*2+bins.length*columnWidth);
-  const plotTop=490, plotHeight=max*rowH+54, baseline=plotTop+plotHeight;
+  canvas.width=Math.max(2800,margin*2+bins.length*columnWidth);
+  const plotHeight=Math.max(1450,max*rowH+70),headerHeight=1200,titleX=margin+80;
+  const firstTall=bins.findIndex(bin=>bin.rows.length&&plotHeight-bin.rows.length*rowH<headerHeight+50);
+  const firstTallX=firstTall<0?canvas.width-margin:margin+firstTall*columnWidth+(columnWidth-flagW)/2;
+  let headerWidth=Math.min(canvas.width*.62,firstTallX-titleX-45),plotTop=140,headerTop=plotTop+35;
+  // Dense early bins need a separate header so text never covers a flag.
+  if(headerWidth<650){headerWidth=canvas.width-2*margin;plotTop=1350;headerTop=65;}
+  const baseline=plotTop+plotHeight;
   const milestoneRows=Math.max(0,...bins.map(bin=>bin.milestones.length));
-  const milestoneHeight=milestones.length?110+milestoneRows*76:0;
-  const milestoneInfoHeight=milestones.length?Math.ceil(milestones.length/2)*44+55:0;
-  const unknownTop=baseline+180+milestoneHeight+milestoneInfoHeight, unknownRowH=130, unknownColumns=2;
-  const unknownFlagW=180, unknownFlagH=80;
+  const infoTop=baseline+175+milestoneRows*92;
+  const unknownTop=milestones.length?infoTop+Math.ceil(milestones.length/2)*52+105:baseline+150;
+  const unknownColumns=canvas.width>=3600?4:2,unknownRowH=135,unknownFlagW=200,unknownFlagH=84;
   const unknownHeight=Math.max(1,Math.ceil(unknown.length/unknownColumns))*unknownRowH;
-  canvas.height=unknownTop+150+unknownHeight+145;
-  const ctx=canvas.getContext('2d'); if(!ctx) throw new Error('Canvas is unavailable in this browser.');
-  ctx.fillStyle='#f8f6ed'; ctx.fillRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle='#17343b'; ctx.font='700 38px sans-serif'; ctx.fillText('FLAG STORIES   /   A VISUAL ATLAS',margin,80);
-  ctx.font='bold 92px Georgia, serif'; ctx.fillText(field==='flag_origin_year'?'The origins of flags':'When current flags were adopted',margin,195);
-  ctx.fillStyle='#526d64'; ctx.font='40px sans-serif';
-  ctx.fillText(`${dated.length} dated flags · ${unknown.length} without a recorded date · ${interval}-year intervals`,margin,263);
-  ctx.font='31px sans-serif';
-  ctx.fillText(field==='flag_origin_year'?'Origin dates may refer to a design, precursor, first use or adoption.':'Current adoption is distinct from the origin of a design or its colors.',margin,325);
-  ctx.fillText('These dates are not uniform creation dates. Each tile represents one flag.',margin,371);
-  ctx.fillText('Column labels mark the first year of each interval.',margin,417);
-  ctx.save(); ctx.globalAlpha=.11; ctx.fillStyle='#17343b'; ctx.font='bold 76px sans-serif';
-  ctx.textAlign='center'; ctx.translate(canvas.width*.53,plotTop+plotHeight*.48); ctx.rotate(-.12); ctx.fillText('@Calcetinletal',0,0); ctx.restore();
-  ctx.strokeStyle='#cbd6cb'; ctx.fillStyle='#5d756a'; ctx.font='21px sans-serif'; ctx.textAlign='right';
-  for(let n=0;n<=max;n+=10){const y=baseline-n*rowH; ctx.beginPath();ctx.moveTo(margin-12,y);ctx.lineTo(canvas.width-margin+12,y);ctx.stroke();ctx.fillText(String(n),margin-24,y+7);}
-  ctx.save();ctx.translate(38,plotTop+plotHeight/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillStyle='#526d64';ctx.font='bold 22px sans-serif';ctx.fillText('NUMBER OF FLAGS',0,0);ctx.restore();
+  canvas.height=unknownTop+150+unknownHeight+110;
+  const ctx=canvas.getContext('2d');if(!ctx)throw new Error('Canvas is unavailable in this browser.');
+  ctx.fillStyle='#f8f6ed';ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.strokeStyle='#cbd6cb';ctx.fillStyle='#5d756a';ctx.font='32px sans-serif';ctx.textAlign='right';
+  for(let n=0;n<=max;n+=10){const y=baseline-n*rowH;ctx.beginPath();ctx.moveTo(margin-12,y);ctx.lineTo(canvas.width-margin+12,y);ctx.stroke();ctx.fillText(String(n),margin-24,y+10);}
+  ctx.save();ctx.translate(48,plotTop+plotHeight/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillStyle='#526d64';ctx.font='bold 32px sans-serif';ctx.fillText('NUMBER OF FLAGS',0,0);ctx.restore();
+  ctx.save();ctx.globalAlpha=.11;ctx.fillStyle='#17343b';ctx.font='bold 96px sans-serif';ctx.textAlign='center';ctx.translate(canvas.width*.55,plotTop+plotHeight*.62);ctx.rotate(-.12);ctx.fillText('@Calcetinletal',0,0);ctx.restore();
+  ctx.fillStyle='#f8f6ed';ctx.fillRect(titleX-20,headerTop-20,headerWidth+30,headerHeight);
+  ctx.textAlign='left';ctx.fillStyle='#17343b';ctx.font='700 42px sans-serif';ctx.fillText('FLAG STORIES   /   A VISUAL ATLAS',titleX,headerTop+45);
+  ctx.font='bold 132px Georgia, serif';
+  const title=field==='flag_origin_year'?'The origins of flags':'When current flags were adopted';
+  let y=headerTop+205;
+  for(const line of wrapCanvasText(ctx,title,headerWidth-40)){ctx.fillText(line,titleX,y);y+=145;}
+  ctx.fillStyle='#526d64';ctx.font='50px sans-serif';y+=10;
+  for(const line of wrapCanvasText(ctx,dated.length+' dated flags · '+unknown.length+' unknown · '+interval+'-year intervals',headerWidth-40)){ctx.fillText(line,titleX,y);y+=64;}
+  ctx.font='40px sans-serif';y+=16;
+  const notes=field==='flag_origin_year'?['Origin dates can describe a design, precursor, first use or adoption.','They are not uniform creation dates. Each tile represents one flag.']:['Current adoption dates differ from the origin of a flag design.','Each tile represents one flag.'];
+  notes.push(spacing==='compact'?'Labels mark interval starts; empty intervals omitted, so spacing is not proportional to time.':'Column labels mark the first year of each interval; spacing is linear.');
+  for(const note of notes)for(const line of wrapCanvasText(ctx,note,headerWidth-40)){ctx.fillText(line,titleX,y);y+=54;}
+  if(y>headerTop+headerHeight)throw new Error('The chart title does not fit safely in the available space.');
   ctx.textAlign='center';
   bins.forEach((bin,index)=>{
     const x=margin+index*columnWidth+(columnWidth-flagW)/2;
     bin.rows.forEach((row,i)=>drawFlag(ctx,images.get(row.country),x,baseline-(i+1)*rowH,flagW,flagH));
-    ctx.fillStyle='#17343b';ctx.font='bold 21px sans-serif';
-    if(bin.rows.length) ctx.fillText(String(bin.rows.length),x+flagW/2,baseline-bin.rows.length*rowH-10);
-    ctx.font='22px sans-serif';ctx.fillText(String(bin.start),x+flagW/2,baseline+38);
+    ctx.fillStyle='#17343b';ctx.font='bold 34px sans-serif';
+    if(bin.rows.length)ctx.fillText(String(bin.rows.length),x+flagW/2,baseline-bin.rows.length*rowH-12);
+    ctx.font='34px sans-serif';ctx.fillText(String(bin.start),x+flagW/2,baseline+48);
+    if(spacing==='compact'&&index>0&&bin.start-bins[index-1].start>interval){
+      ctx.fillStyle='#a4472a';ctx.font='bold 28px sans-serif';ctx.fillText('//',margin+index*columnWidth,baseline+48);
+    }
   });
   if(milestones.length){
-    ctx.textAlign='left';ctx.fillStyle='#a4472a';ctx.font='bold 28px sans-serif';
-    ctx.fillText('OUTLINED FLAGS: DOCUMENTED MILESTONES · NOT INCLUDED IN THE COUNTS',margin,baseline+90);
+    ctx.textAlign='left';ctx.fillStyle='#a4472a';ctx.font='bold 34px sans-serif';
+    ctx.fillText('OUTLINED FLAGS: DOCUMENTED MILESTONES · NOT INCLUDED IN THE COUNTS',margin,baseline+105);
     bins.forEach((bin,index)=>bin.milestones.forEach((milestone,i)=>{
-      const x=margin+index*columnWidth+(columnWidth-flagW)/2,y=baseline+112+i*76;
-      drawFlag(ctx,images.get(milestone.row.country),x,y,flagW,42);
-      ctx.strokeStyle='#c75e37';ctx.lineWidth=3;ctx.strokeRect(x,y,flagW,42);
-      ctx.fillStyle='#a4472a';ctx.font='bold 25px sans-serif';ctx.textAlign='center';ctx.fillText(String(milestone.year),x+flagW/2,y+68);
+      const x=margin+index*columnWidth+(columnWidth-flagW)/2,y=baseline+135+i*92;
+      drawFlag(ctx,images.get(milestone.row.country),x,y,flagW,48);
+      ctx.strokeStyle='#c75e37';ctx.lineWidth=3;ctx.strokeRect(x,y,flagW,48);
+      ctx.fillStyle='#a4472a';ctx.font='bold 31px sans-serif';ctx.textAlign='center';ctx.fillText(String(milestone.year),x+flagW/2,y+80);
     }));
     const kindLabel={documented_depiction:'depiction',documented_adoption:'adoption',documented_regulation:'regulation',documented_version_change:'version change'};
-    const infoTop=baseline+132+milestoneRows*76,infoWidth=(canvas.width-margin*2)/2;
-    ctx.font='28px sans-serif';ctx.fillStyle='#794a39';ctx.textAlign='left';
-    milestones.forEach((m,i)=>ctx.fillText(`${m.row.country} ${m.year} · ${kindLabel[m.kind]}`,margin+(i%2)*infoWidth,infoTop+Math.floor(i/2)*44));
+    const infoWidth=(canvas.width-margin*2)/2;ctx.font='34px sans-serif';ctx.fillStyle='#794a39';ctx.textAlign='left';
+    milestones.forEach((m,i)=>ctx.fillText(m.row.country+' '+m.year+' · '+kindLabel[m.kind],margin+(i%2)*infoWidth,infoTop+Math.floor(i/2)*52));
   }
-  ctx.textAlign='left'; ctx.fillStyle='#17343b';ctx.font='bold 52px sans-serif';
-  ctx.fillText(`UNKNOWN ${field==='flag_origin_year'?'ORIGIN':'ADOPTION'} YEAR  ·  ${unknown.length}`,margin,unknownTop);
-  ctx.fillStyle='#526d64';ctx.font='34px sans-serif';ctx.fillText('Included separately because no reliable year is recorded in the supplied dataset.',margin,unknownTop+56);
+  ctx.textAlign='left';ctx.fillStyle='#17343b';ctx.font='bold 60px sans-serif';
+  ctx.fillText('UNKNOWN '+(field==='flag_origin_year'?'ORIGIN':'ADOPTION')+' YEAR  ·  '+unknown.length,margin,unknownTop);
+  ctx.fillStyle='#526d64';ctx.font='40px sans-serif';ctx.fillText('No reliable year is recorded in the supplied dataset.',margin,unknownTop+60);
   const cell=(canvas.width-margin*2)/unknownColumns;
   unknown.forEach((row,i)=>{
-    const x=margin+(i%unknownColumns)*cell,y=unknownTop+95+Math.floor(i/unknownColumns)*unknownRowH;
+    const x=margin+(i%unknownColumns)*cell,y=unknownTop+100+Math.floor(i/unknownColumns)*unknownRowH;
     drawFlag(ctx,images.get(row.country),x,y,unknownFlagW,unknownFlagH);
-    ctx.fillStyle='#17343b';ctx.font='44px sans-serif';
-    let name=row.country; while(name.length>1&&ctx.measureText(name).width>cell-unknownFlagW-20) name=name.slice(0,-1);
-    if(name!==row.country) name=name.trimEnd()+'…';
-    ctx.fillText(name,x+unknownFlagW+24,y+55);
+    ctx.fillStyle='#17343b';ctx.font='52px sans-serif';
+    let name=row.country;while(name.length>1&&ctx.measureText(name).width>cell-unknownFlagW-40)name=name.slice(0,-1);
+    if(name!==row.country)name=name.trimEnd()+'…';
+    ctx.fillText(name,x+unknownFlagW+24,y+61);
   });
   const footer=canvas.height-42;
-  ctx.fillStyle='#17343b';ctx.font='bold 28px sans-serif';ctx.fillText('FLAG STORIES  ·  @Calcetinletal',margin,footer);
-  ctx.textAlign='right';ctx.font='25px sans-serif';ctx.fillText('Sources: supplied dataset and milestone records · Flags: FlagCDN / Wikimedia Commons',canvas.width-margin,footer);
-  ctx.font='22px sans-serif';ctx.fillText('calcetinletal.github.io/flag-atlas/',canvas.width-margin,footer+28);
+  ctx.fillStyle='#17343b';ctx.font='bold 32px sans-serif';ctx.fillText('FLAG STORIES  ·  @Calcetinletal',margin,footer);
+  ctx.textAlign='right';ctx.font='28px sans-serif';ctx.fillText('Sources: supplied dataset and milestone records · Flags: FlagCDN / Wikimedia Commons',canvas.width-margin,footer);
+  ctx.font='24px sans-serif';ctx.fillText('calcetinletal.github.io/flag-atlas/',canvas.width-margin,footer+30);
   const blob=await new Promise((resolve,reject)=>canvas.toBlob(value=>value?resolve(value):reject(new Error('PNG creation failed.')),'image/png'));
   return {blob,width:canvas.width,height:canvas.height};
 }
 
 async function downloadHistory(){
   const button=$('download-history'),status=$('download-status');
-  const field=$('history-measure').value,interval=Number($('history-bin').value);
+  const field=$('history-measure').value,interval=Number($('history-bin').value),spacing=$('history-spacing').value;
   button.disabled=true;status.textContent='Preparing the full-resolution PNG…';
   try {
-    const result=await createHistoryPNG(state.rows,field,interval);
+    const result=await createHistoryPNG(state.rows,field,interval,spacing);
     const url=URL.createObjectURL(result.blob),link=document.createElement('a');
-    link.href=url;link.download=`flag-stories-${field==='flag_origin_year'?'origins':'adoptions'}-${interval}y.png`;
+    link.href=url;link.download=`flag-stories-${field==='flag_origin_year'?'origins':'adoptions'}-${interval}y${spacing==='linear'?'-linear':''}.png`;
     document.body.appendChild(link);link.click();link.remove();window.setTimeout(()=>URL.revokeObjectURL(url),30000);
     status.textContent=`Downloaded ${result.width.toLocaleString()} × ${result.height.toLocaleString()} px PNG.`;
   } catch(error) {console.error(error);status.textContent=`Could not create the chart: ${error.message}. Please try again.`;}
@@ -441,6 +500,12 @@ async function init(){
   try {
     const response=await fetch('data.json'); if(!response.ok) throw new Error(`HTTP ${response.status}`);
     state.rows=await response.json();
+    try{
+      const geographyResponse=await fetch('geography_m49.json');if(!geographyResponse.ok)throw new Error('Geography unavailable');
+      const data=await geographyResponse.json(),map=data?.by_iso_alpha2;
+      if(!map||typeof map!=='object'||!Object.values(map).every(item=>item&&typeof item.region==='string'&&typeof item.subregion==='string'))throw new Error('Invalid geographic classification');
+      state.geography=map;
+    }catch(error){state.geography={};console.warn('Geographic classification unavailable',error);document.querySelector('.network-geography-note').textContent='Geographic classification unavailable; all entries are unclassified.';}
     const milestonesResponse=await fetch('documented_milestones.json');
     if(!milestonesResponse.ok) throw new Error('Documented milestone data unavailable.');
     state.milestones=await milestonesResponse.json();
@@ -450,19 +515,22 @@ async function init(){
     }
     $('hero-count').textContent=state.rows.length; $('hero-dated').textContent=state.rows.filter(r=>r.flag_origin_year!==null).length;
     $('history-summary').insertAdjacentHTML('afterend','<p id="milestone-legend" class="milestone-legend"><span></span> Outlined flags below the years mark documented milestones for flags with unknown origins. They are not creation years and are not counted in the bars. Select one for its source.</p>');
-    initColors(); render(); renderPaletteStats(); initNetwork(); initNetworkDragging(); renderHistory(); nextRound();
+    initColors(); render(); renderPaletteStats(); initNetwork(); initNetworkDragging(); initNetworkHighlight(); renderHistory(); nextRound();
     ['search','era','scope','match','sort'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',()=>{state.limit=24;render();}));
     $('reset').addEventListener('click',reset); $('empty-reset').addEventListener('click',reset);
     $('more').addEventListener('click',()=>{state.limit+=24;render();});
     $('cards').addEventListener('click',e=>{const card=e.target.closest('[data-country]'); if(card) details(state.rows.find(r=>r.country===card.dataset.country));});
     $('palette-combos').addEventListener('click',e=>{const combo=e.target.closest('[data-colors]');if(combo) exploreExactPalette(combo.dataset.colors.split(','));});
-    $('network-select').addEventListener('change',()=>{renderNetwork();revealNetworkSelection();});
+    $('network-select').addEventListener('change',()=>{state.networkPinned=$('network-select').value;renderNetwork();highlightNetwork(state.networkPinned);revealNetworkSelection();});
     $('network-mode').addEventListener('change',event=>createNetwork(event.target.value));
+    $('network-region').addEventListener('change',()=>{updateNetworkSubregions();createNetwork($('network-mode').value);});
+    $('network-subregion').addEventListener('change',()=>createNetwork($('network-mode').value));
+    $('network-links').addEventListener('change',event=>$('network-graph').classList.toggle('show-all-links',event.target.value==='all'));
     $('network-zoom-in').addEventListener('click',()=>setNetworkZoom(state.networkZoom+.15));
     $('network-zoom-out').addEventListener('click',()=>setNetworkZoom(state.networkZoom-.15));
     $('network-restart').addEventListener('click',animateNetwork);
     $('network-details').addEventListener('click',()=>{const row=state.rows.find(r=>r.country===$('network-select').value);if(row) details(row);});
-    ['network-graph','twins-list'].forEach(id=>$(id).addEventListener('click',e=>{const node=e.target.closest('[data-network]');if(node){$('network-select').value=node.dataset.network;renderNetwork();if(id==='twins-list')revealNetworkSelection();$('network-select').focus({preventScroll:true});}}));
+    ['network-graph','twins-list'].forEach(id=>$(id).addEventListener('click',e=>{const node=e.target.closest('[data-network]');if(node){$('network-select').value=node.dataset.network;state.networkPinned=node.dataset.network;renderNetwork();highlightNetwork(state.networkPinned);if(id==='twins-list')revealNetworkSelection();$('network-select').focus({preventScroll:true});}}));
     $('timeline').addEventListener('click',e=>{const bar=e.target.closest('[data-period]'); if(bar){$('era').value=bar.dataset.period;state.limit=24;render();}});
     ['history-measure','history-bin'].forEach(id=>$(id).addEventListener('change',renderHistory));
     $('download-history').addEventListener('click',downloadHistory);
