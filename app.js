@@ -107,52 +107,147 @@ function renderPaletteStats(){
   }).join('');
   $('palette-combos').innerHTML=combos.slice(0,6).map(item=>`<button type="button" class="combo-card" data-colors="${escapeHTML(item.colors.join(','))}" aria-label="Show ${item.count} flags whose detected colors are ${escapeHTML(item.colors.join(', '))}"><span class="combo-swatches">${item.colors.map(c=>`<i style="--swatch:${palette[c]}"></i>`).join('')}</span><span class="combo-names">${escapeHTML(item.colors.join(' · '))}</span><strong>${item.count}<small> flags</small></strong></button>`).join('') || '<p>No color data is available.</p>';
 }
-// A maximum-similarity spanning forest keeps the full graph legible. A flag
-// without any shared detected colors remains visible, but has no invented edge.
-function buildNetwork(rows){
-  const ordered=rows.slice().sort((a,b)=>a.country.localeCompare(b.country));
-  const n=ordered.length, scores=ordered.map((row,i)=>ordered.map((other,j)=>i===j?0:paletteSimilarity(row,other).score));
-  const used=new Set(), best=Array(n).fill(0), parent=Array(n).fill(-1), edges=[];
-  while(used.size<n){
-    let next=-1;
-    for(let i=0;i<n;i++) if(!used.has(i) && (next<0 || best[i]>best[next])) next=i;
-    used.add(next);
-    if(parent[next]>=0 && best[next]>0) edges.push({a:parent[next],b:next,score:best[next]});
-    for(let i=0;i<n;i++) if(!used.has(i) && scores[next][i]>best[i]){best[i]=scores[next][i];parent[i]=next;}
+// Links represent each node's two closest matches; the force layout uses all
+// valid pair scores, so omitted links still influence proximity.
+const NETWORK_WIDTH=1500, NETWORK_HEIGHT=1000, NETWORK_NEIGHBORS=2;
+function networkScore(a,b,mode){
+  if(mode==='year'){
+    if(!Number.isInteger(a.flag_origin_year) || !Number.isInteger(b.flag_origin_year)) return 0;
+    return 1/(1+Math.abs(a.flag_origin_year-b.flag_origin_year)/50);
   }
-  const adjacency=ordered.map(()=>[]);
-  edges.forEach(({a,b})=>{adjacency[a].push(b);adjacency[b].push(a);});
-  const visitOrder=[],seen=new Set();
-  function visit(index){seen.add(index);visitOrder.push(index);adjacency[index].forEach(neighbor=>{if(!seen.has(neighbor)) visit(neighbor);});}
-  ordered.forEach((_,i)=>{if(!seen.has(i)) visit(i);});
-  const cols=14, spacingX=116, spacingY=86, positions=Array(n);
-  visitOrder.forEach((index,i)=>{const row=Math.floor(i/cols), col=i%cols;positions[index]={x:58+(row%2?cols-1-col:col)*spacingX,y:44+row*spacingY};});
-  return {rows:ordered,edges,positions,width:cols*spacingX,height:Math.max(90,Math.ceil(n/cols)*spacingY)};
+  return paletteSimilarity(a,b).score;
+}
+function buildNetwork(rows,mode='color',previous=null){
+  const ordered=rows.slice().sort((a,b)=>a.country.localeCompare(b.country)),n=ordered.length;
+  const known=row=>mode==='year'?Number.isInteger(row.flag_origin_year):detectedColors(row).length>0;
+  const scores=ordered.map((row,i)=>ordered.map((other,j)=>i===j?0:networkScore(row,other,mode)));
+  const unknown=ordered.filter(row=>!known(row)).length;
+  let missingIndex=0;
+  const nodes=ordered.map((row,i)=>{
+    const valid=known(row),angle=i*2.3999632297,radius=45+15*Math.sqrt(i),old=previous?.get(row.country);
+    const missing=valid?-1:missingIndex++;
+    return {row,known:valid,x:valid?(old?.x??NETWORK_WIDTH/2+radius*Math.cos(angle)):95+(missing+.5)*(NETWORK_WIDTH-190)/Math.max(1,unknown),y:valid?Math.min(790,old?.y??400+radius*Math.sin(angle)):910,vx:0,vy:0};
+  });
+  const pairs=new Set(),edges=[];
+  for(let i=0;i<n;i++){
+    const nearest=ordered.map((row,j)=>({j,score:scores[i][j],name:row.country})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name)).slice(0,NETWORK_NEIGHBORS);
+    for(const item of nearest){const a=Math.min(i,item.j),b=Math.max(i,item.j),key=a+':'+b;if(!pairs.has(key)){pairs.add(key);edges.push({a,b,score:item.score});}}
+  }
+  const years=ordered.map(row=>row.flag_origin_year).filter(Number.isInteger);
+  return {mode,rows:ordered,nodes,scores,edges,width:NETWORK_WIDTH,height:NETWORK_HEIGHT,unknown,yearMin:years.length?Math.min(...years):null,yearMax:years.length?Math.max(...years):null};
+}
+function stepNetwork(graph,alpha=1){
+  const nodes=graph.nodes,n=nodes.length;
+  for(let i=0;i<n;i++) for(let j=i+1;j<n;j++){
+    const a=nodes[i],b=nodes[j];
+    if(!a.known || !b.known) continue;
+    let dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy);
+    if(d<.001){dx=(i%2?1:-1)*.01;dy=(j%2?1:-1)*.01;d=Math.hypot(dx,dy);}
+    const desired=graph.mode==='year'?44+Math.min(Math.abs(a.row.flag_origin_year-b.row.flag_origin_year),400)*1.4:44+(1-graph.scores[i][j])*750;
+    const spring=(d-desired)*.00015*alpha;
+    const collision=d<46?(46-d)*.18:0;
+    const force=spring-collision,fx=dx/d*force,fy=dy/d*force;
+    if(!a.dragging){a.vx+=fx;a.vy+=fy;} if(!b.dragging){b.vx-=fx;b.vy-=fy;}
+  }
+  for(const node of nodes){
+    if(!node.known || node.dragging) continue;
+    node.vx+=(NETWORK_WIDTH/2-node.x)*.00035*alpha;
+    node.vy+=(410-node.y)*.00035*alpha;
+    if(graph.mode==='year'){
+      const target=80+(node.row.flag_origin_year-graph.yearMin)/Math.max(1,graph.yearMax-graph.yearMin)*(NETWORK_WIDTH-160);
+      node.vx+=(target-node.x)*.009*alpha;
+    }
+    node.vx=Math.max(-7,Math.min(7,node.vx*.86));node.vy=Math.max(-7,Math.min(7,node.vy*.86));
+    node.x=Math.max(26,Math.min(NETWORK_WIDTH-26,node.x+node.vx));
+    node.y=Math.max(26,Math.min(810,node.y+node.vy));
+  }
+}
+function drawNetwork(){
+  const graph=state.network;if(!graph) return;
+  graph.nodes.forEach((node,i)=>{const el=graph.nodeElements[i];el.style.left=node.x.toFixed(2)+'px';el.style.top=node.y.toFixed(2)+'px';});
+  graph.edges.forEach((edge,i)=>{const line=graph.edgeElements[i],a=graph.nodes[edge.a],b=graph.nodes[edge.b];line.setAttribute('x1',a.x.toFixed(2));line.setAttribute('y1',a.y.toFixed(2));line.setAttribute('x2',b.x.toFixed(2));line.setAttribute('y2',b.y.toFixed(2));});
+}
+function animateNetwork(){
+  const graph=state.network;if(!graph) return;
+  graph.frames=180;
+  if(graph.frameHandle) return;
+  const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  if(reduced || !window.requestAnimationFrame){for(let i=0;i<60;i++)stepNetwork(graph,1-i/75);drawNetwork();graph.frames=0;return;}
+  function frame(){
+    if(state.network!==graph){graph.frameHandle=null;return;}
+    const alpha=Math.max(.12,graph.frames/180);
+    stepNetwork(graph,alpha);drawNetwork();graph.frames--;
+    graph.frameHandle=graph.frames>0?window.requestAnimationFrame(frame):null;
+  }
+  graph.frameHandle=window.requestAnimationFrame(frame);
+}
+function setNetworkZoom(value){
+  const graph=state.network;if(!graph)return;
+  state.networkZoom=Math.max(.5,Math.min(1.5,value));
+  $('network-stage').style.width=(graph.width*state.networkZoom)+'px';
+  $('network-stage').style.height=(graph.height*state.networkZoom)+'px';
+  $('network-graph').style.transform='scale('+state.networkZoom+')';
+  $('network-zoom-label').textContent=Math.round(state.networkZoom*100)+'%';
 }
 function initNetwork(){
-  const graph=buildNetwork(state.rows);state.network=graph;
-  $('network-select').innerHTML=graph.rows.map(row=>`<option value="${escapeHTML(row.country)}">${escapeHTML(row.country)}</option>`).join('');
-  if(!graph.rows.length){$('network-graph').textContent='No flags are available.';return;}
-  $('network-graph').style.width=graph.width+'px';$('network-graph').style.height=graph.height+'px';
-  $('network-graph').innerHTML=`<svg class="network-lines" viewBox="0 0 ${graph.width} ${graph.height}" aria-hidden="true">${graph.edges.map(({a,b,score})=>`<line class="network-edge" data-a="${escapeHTML(graph.rows[a].country)}" data-b="${escapeHTML(graph.rows[b].country)}" data-score="${score}" x1="${graph.positions[a].x}" y1="${graph.positions[a].y}" x2="${graph.positions[b].x}" y2="${graph.positions[b].y}"/>`).join('')}</svg>${graph.rows.map((row,i)=>`<button type="button" class="network-node" data-network="${escapeHTML(row.country)}" style="left:${graph.positions[i].x}px;top:${graph.positions[i].y}px" aria-label="Explore ${escapeHTML(row.country)} in the network" aria-pressed="false">${imageHTML(row)}<strong>${escapeHTML(row.country)}</strong></button>`).join('')}`;
-  $('network-select').value=graph.rows[0].country;
-  renderNetwork();
+  const ordered=state.rows.slice().sort((a,b)=>a.country.localeCompare(b.country));
+  $('network-select').innerHTML=ordered.map(row=>'<option value="'+escapeHTML(row.country)+'">'+escapeHTML(row.country)+'</option>').join('');
+  if(!ordered.length){$('network-graph').textContent='No flags are available.';return;}
+  $('network-select').value=ordered[0].country;state.networkZoom=.75;
+  createNetwork('color');
+  if(window.IntersectionObserver){
+    const observer=new IntersectionObserver(entries=>{if(entries.some(entry=>entry.isIntersecting))animateNetwork();},{threshold:.15});
+    observer.observe(document.querySelector('.network-scroll'));
+  }
+}
+function createNetwork(mode){
+  const previous=state.network?new Map(state.network.nodes.map(node=>[node.row.country,node])):null;
+  if(state.network?.frameHandle && window.cancelAnimationFrame)window.cancelAnimationFrame(state.network.frameHandle);
+  const graph=buildNetwork(state.rows,mode,previous);state.network=graph;
+  const container=$('network-graph');
+  container.style.width=graph.width+'px';container.style.height=graph.height+'px';
+  const lines=graph.edges.map(edge=>'<line class="network-edge" data-a="'+escapeHTML(graph.rows[edge.a].country)+'" data-b="'+escapeHTML(graph.rows[edge.b].country)+'" data-score="'+edge.score+'"/>').join('');
+  const nodes=graph.nodes.map(node=>'<button type="button" class="network-node'+(node.known?'':' unavailable')+'" data-network="'+escapeHTML(node.row.country)+'" title="'+escapeHTML(node.row.country+' · origin '+yearText(node.row)+' · colors: '+(detectedColors(node.row).join(', ')||'unavailable'))+'" aria-label="Explore '+escapeHTML(node.row.country)+', origin '+escapeHTML(yearText(node.row))+'" aria-pressed="false"><span class="network-flag">'+imageHTML(node.row)+'</span><span class="network-name">'+escapeHTML(node.row.country)+'</span></button>').join('');
+  container.innerHTML='<svg class="network-lines" viewBox="0 0 '+graph.width+' '+graph.height+'" aria-hidden="true">'+lines+'</svg>'+(graph.unknown?'<div class="network-unknown-label">'+(mode==='year'?'ORIGIN YEAR UNKNOWN':'COLOR DATA UNAVAILABLE')+' · '+graph.unknown+'</div>':'')+nodes;
+  graph.nodeElements=[...container.querySelectorAll('.network-node')];graph.edgeElements=[...container.querySelectorAll('.network-edge')];
+  setNetworkZoom(state.networkZoom);drawNetwork();renderNetwork();animateNetwork();
 }
 function renderNetwork(){
-  const focus=state.rows.find(row=>row.country===$('network-select').value);
-  if(!focus) return;
-  const matches=closestPalettes(state.rows,focus);
-  $('network-title').textContent=`All flags, connected by color`;
-  $('network-count').textContent=`${state.network.rows.length} flags · ${state.network.edges.length} links`;
-  $('twins-explainer').textContent='Score = shared colors ÷ all distinct colors across both flags.';
-  $('network-graph').querySelectorAll('.network-node').forEach(node=>{const selected=node.dataset.network===focus.country;node.classList.toggle('selected',selected);node.setAttribute('aria-pressed',String(selected));});
-  $('network-graph').querySelectorAll('.network-edge').forEach(line=>line.classList.toggle('selected',line.dataset.a===focus.country||line.dataset.b===focus.country));
-  $('twins-list').innerHTML=matches.map(m=>`<button type="button" class="twin-card" data-network="${escapeHTML(m.row.country)}"><span class="twin-flag">${imageHTML(m.row)}</span><span class="twin-copy"><strong>${escapeHTML(m.row.country)}</strong><small>Origin: ${yearText(m.row)}</small><span>Shared: ${escapeHTML(m.shared.join(', '))}</span></span><b>${Math.round(m.score*100)}<small>%</small></b></button>`).join('') || '<p>No other flags with a shared detected color were found.</p>';
+  const graph=state.network,focus=state.rows.find(row=>row.country===$('network-select').value);
+  if(!focus||!graph)return;
+  const mode=graph.mode;
+  const matches=mode==='color'?closestPalettes(state.rows,focus):(!Number.isInteger(focus.flag_origin_year)?[]:state.rows.filter(row=>row.country!==focus.country&&Number.isInteger(row.flag_origin_year)).map(row=>({row,difference:Math.abs(row.flag_origin_year-focus.flag_origin_year)})).sort((a,b)=>a.difference-b.difference||a.row.country.localeCompare(b.row.country)).slice(0,NETWORK_LIMIT));
+  $('network-title').textContent=mode==='year'?'A network of origin years':'A network of flag colors';
+  $('network-count').textContent=graph.rows.length+' flags · '+graph.edges.length+' links';
+  $('network-method').textContent=mode==='year'?'Closer recorded origin years pull together; the layout also favors older flags to the left. Pairwise gaps above 400 years are capped; unknown years appear separately.':'Color similarity uses shared detected colors divided by all detected colors in both flags.';
+  $('twins-explainer').textContent=mode==='year'?'Ranked by the absolute difference in recorded origin years.':'Score = shared colors ÷ all distinct colors across both flags.';
+  graph.nodeElements.forEach(node=>{const selected=node.dataset.network===focus.country;node.classList.toggle('selected',selected);node.setAttribute('aria-pressed',String(selected));});
+  graph.edgeElements.forEach(line=>line.classList.toggle('selected',line.dataset.a===focus.country||line.dataset.b===focus.country));
+  $('twins-list').innerHTML=matches.map(m=>'<button type="button" class="twin-card" data-network="'+escapeHTML(m.row.country)+'"><span class="twin-flag">'+imageHTML(m.row)+'</span><span class="twin-copy"><strong>'+escapeHTML(m.row.country)+'</strong><small>Origin: '+yearText(m.row)+'</small><span>'+(mode==='year'?'Recorded origin':'Shared: '+escapeHTML(m.shared.join(', ')))+'</span></span><b>'+(mode==='year'?m.difference+'<small> yr</small>':Math.round(m.score*100)+'<small>%</small>')+'</b></button>').join('') || '<p>No comparable '+(mode==='year'?'origin year':'detected colors')+' available for this flag.</p>';
 }
 function revealNetworkSelection(){
-  const node=[...$('network-graph').querySelectorAll('.network-node')].find(item=>item.dataset.network===$('network-select').value);
-  const scroll=document.querySelector('.network-scroll');
-  if(node && scroll) scroll.scrollTo?.({left:parseFloat(node.style.left)-scroll.clientWidth/2,top:parseFloat(node.style.top)-scroll.clientHeight/2,behavior:'smooth'});
+  const node=state.network?.nodes.find(item=>item.row.country===$('network-select').value),scroll=document.querySelector('.network-scroll');
+  if(node&&scroll)scroll.scrollTo?.({left:node.x*state.networkZoom-scroll.clientWidth/2,top:node.y*state.networkZoom-scroll.clientHeight/2,behavior:'smooth'});
+}
+function initNetworkDragging(){
+  const container=$('network-graph');let drag=null,suppressClick=false;
+  container.addEventListener('pointerdown',event=>{
+    const element=event.target.closest('[data-network]');if(!element || event.button!==0)return;
+    const node=state.network.nodes.find(item=>item.row.country===element.dataset.network);
+    drag={node,element,startX:event.clientX,startY:event.clientY,moved:false};element.setPointerCapture?.(event.pointerId);
+  });
+  container.addEventListener('pointermove',event=>{
+    if(!drag)return;
+    if(Math.hypot(event.clientX-drag.startX,event.clientY-drag.startY)>4)drag.moved=true;
+    if(!drag.moved)return;
+    const rect=container.getBoundingClientRect(),node=drag.node;node.dragging=true;
+    node.x=Math.max(26,Math.min(NETWORK_WIDTH-26,(event.clientX-rect.left)/state.networkZoom));
+    node.y=Math.max(node.known?26:850,Math.min(node.known?810:970,(event.clientY-rect.top)/state.networkZoom));
+    node.vx=node.vy=0;drawNetwork();
+  });
+  function release(){if(!drag)return;drag.node.dragging=false;if(drag.moved){suppressClick=true;window.setTimeout(()=>{suppressClick=false;},0);animateNetwork();}drag=null;}
+  container.addEventListener('pointerup',release);container.addEventListener('pointercancel',release);
+  container.addEventListener('click',event=>{if(suppressClick){event.stopImmediatePropagation();event.preventDefault();}},true);
 }
 function exploreExactPalette(colors){
   $('search').value='';$('era').value='all';$('scope').value='all';$('sort').value='name';$('match').value='exact';
@@ -355,13 +450,17 @@ async function init(){
     }
     $('hero-count').textContent=state.rows.length; $('hero-dated').textContent=state.rows.filter(r=>r.flag_origin_year!==null).length;
     $('history-summary').insertAdjacentHTML('afterend','<p id="milestone-legend" class="milestone-legend"><span></span> Outlined flags below the years mark documented milestones for flags with unknown origins. They are not creation years and are not counted in the bars. Select one for its source.</p>');
-    initColors(); render(); renderPaletteStats(); initNetwork(); renderHistory(); nextRound();
+    initColors(); render(); renderPaletteStats(); initNetwork(); initNetworkDragging(); renderHistory(); nextRound();
     ['search','era','scope','match','sort'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',()=>{state.limit=24;render();}));
     $('reset').addEventListener('click',reset); $('empty-reset').addEventListener('click',reset);
     $('more').addEventListener('click',()=>{state.limit+=24;render();});
     $('cards').addEventListener('click',e=>{const card=e.target.closest('[data-country]'); if(card) details(state.rows.find(r=>r.country===card.dataset.country));});
     $('palette-combos').addEventListener('click',e=>{const combo=e.target.closest('[data-colors]');if(combo) exploreExactPalette(combo.dataset.colors.split(','));});
     $('network-select').addEventListener('change',()=>{renderNetwork();revealNetworkSelection();});
+    $('network-mode').addEventListener('change',event=>createNetwork(event.target.value));
+    $('network-zoom-in').addEventListener('click',()=>setNetworkZoom(state.networkZoom+.15));
+    $('network-zoom-out').addEventListener('click',()=>setNetworkZoom(state.networkZoom-.15));
+    $('network-restart').addEventListener('click',animateNetwork);
     $('network-details').addEventListener('click',()=>{const row=state.rows.find(r=>r.country===$('network-select').value);if(row) details(row);});
     ['network-graph','twins-list'].forEach(id=>$(id).addEventListener('click',e=>{const node=e.target.closest('[data-network]');if(node){$('network-select').value=node.dataset.network;renderNetwork();if(id==='twins-list')revealNetworkSelection();$('network-select').focus({preventScroll:true});}}));
     $('timeline').addEventListener('click',e=>{const bar=e.target.closest('[data-period]'); if(bar){$('era').value=bar.dataset.period;state.limit=24;render();}});
