@@ -12,6 +12,8 @@
 
 World Factbook archive: `https://codeload.github.com/factbook/factbook.json/tar.gz/144d6977b2b01ac1cbd220de754c0a005616760b`; SHA-256 `3e70c3008d32b670e6eb7be3f93f03b4a6ce368258a21d3d09f5d47409b41ece`. The archive repository commit was dated 2026-09-11; that is not a claim that each underlying Factbook entry was updated on that day. No date was inferred for missing origins. The generated accounts contain 194 excerpts and three profile-only records before curated overrides; seven entries lack an archive profile and one is excluded due to a variant conflict.
 
+`verify_deployment.py` compares the SHA-256 of the deployed HTML, scripts, data, source CSV, attribution and every referenced flag image against the checkout. This check must be run again after any deployment or input change.
+
 Tests run after the last generated data change:
 
 ```text

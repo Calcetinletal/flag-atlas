@@ -18,6 +18,7 @@ curl -fsSL https://codeload.github.com/factbook/factbook.json/tar.gz/144d6977b2b
 python3 test_data.py /tmp/flag_factbook.tar.gz
 node --check app.js
 node test_site.cjs /path/to/node_modules/jsdom
+python3 verify_deployment.py https://calcetinletal.github.io/flag-atlas/
 ```
 
 The archive includes historical accounts that are not automatically equivalent to current official positions. Images may represent a related civil or state variant. These limits are not resolved by passing the technical tests.
