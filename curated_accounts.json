@@ -1,0 +1,68 @@
+{
+  "Abkhazia": {
+    "text": "Abkhazia’s foreign ministry connects the alternating green and white stripes to the Mountain Republic of 1918. It describes green as life and white as a bright future.",
+    "source_name": "Abkhazia Ministry of Foreign Affairs",
+    "url": "https://www.mfaapsny.org/en/allnews/news/othernews/23-iyulya-den-gosudarstvennogo-flaga-respubliki-abkhaziya/",
+    "scope": "Source's own interpretation; status of the entity is disputed."
+  },
+  "Afghanistan": {
+    "text": "The Afghanistan Analysts Network describes the Taliban’s white flag with the Islamic profession of faith. It does not establish why white was chosen.",
+    "source_name": "Afghanistan Analysts Network",
+    "url": "https://www.afghanistan-analysts.org/en/reports/war-and-peace/rallying-around-the-white-flag-taleban-embrace-an-assertive-identity/",
+    "scope": "The CSV identifies the de facto Islamic Emirate flag; other Afghan flags remain in use. The color’s origin is unresolved here."
+  },
+  "Cook Islands": {
+    "text": "The Cook Islands Constitution describes blue as representing the Pacific Ocean in which the islands are scattered.",
+    "source_name": "Cook Islands Constitution, flag schedule",
+    "url": "https://www.cookislands.gov.ck/images/documents/CEO_docs/Legislations/Constitution-of-the-Cook-Islands/Constitution%20of%20the%20Cook%20Islands%20as%20at%2017%20July%201997%20with%20amendments%20incorporated.pdf",
+    "scope": "The constitution's account of the blue field; it does not supply an origin for every color here."
+  },
+  "Czechia": {
+    "text": "Prague Castle traces the national flag’s colors to the same heraldic basis as the historic coats of arms of the lands.",
+    "source_name": "Prague Castle, Touches of Statehood",
+    "url": "https://www.hrad.cz/en/culture-at-the-castle/program/touches-of-statehood-11668",
+    "scope": "Broad historical origin; the source does not assign a separate meaning to each color."
+  },
+  "Northern Cyprus": {
+    "text": "The red-and-white design reverses the colors of the Turkish flag and adds two red stripes; accounts differ on the symbolism of those stripes.",
+    "source_name": "Ryan D. Griffiths, Secession and the Sovereignty Game, chapter 9",
+    "url": "https://academic.oup.com/cornell-scholarship-online/book/37914/chapter-abstract/332423276",
+    "scope": "An academic account of the design; status of the entity is disputed. The chapter may require access."
+  },
+  "Palestine": {
+    "text": "The Palestinian foreign ministry presents a commonly cited account linking the colors to Arab nationalist ideas and the Arab Revolt flag; it also discusses other interpretations.",
+    "source_name": "Palestinian Ministry of Foreign Affairs",
+    "url": "https://www.mofa.pna.ps/en-us/palestine/thepalestinianflag",
+    "scope": "Attributed account; the source itself describes multiple versions of the colors' origins."
+  },
+  "Somaliland": {
+    "text": "Somaliland’s constitution specifies green, white and red bands, a white inscription and a black star. This description does not explain why the colors were selected.",
+    "source_name": "Constitution of Somaliland, article 7",
+    "url": "https://www.icla.up.ac.za/images/constitutions/somaliland_constitution.pdf",
+    "scope": "Color origins remain unresolved; status of the entity is disputed."
+  },
+  "South Ossetia": {
+    "text": "The South Ossetian foreign ministry describes white, red and yellow as a traditional Ossetian palette and associates them with wisdom, courage and prosperity, respectively.",
+    "source_name": "South Ossetia Ministry of Foreign Affairs",
+    "url": "https://mfa.rsogov.org/en/node/4",
+    "scope": "The authority's interpretation; status of the entity is disputed."
+  },
+  "Transnistria": {
+    "text": "A local travel source describes the red-green-red flag as closely resembling the former Moldavian Soviet Socialist Republic flag.",
+    "source_name": "Transnistria Travel, flag history",
+    "url": "https://open-nistrenia.md/transnistria-flag-and-coat-of-arms/",
+    "scope": "This explains a design connection, not why the original colors were chosen; status of the entity is disputed."
+  },
+  "Western Sahara (Sahrawi Arab Democratic Republic)": {
+    "text": "Flags of the World describes the flag as using pan-Arab colors and as resembling the Palestinian flag, with a crescent and star added.",
+    "source_name": "Flags of the World, Western Sahara",
+    "url": "https://www.crwflags.net/fotw/flags/eh.html",
+    "scope": "A vexillological account, with alternative interpretations on the linked page; sovereignty is disputed."
+  },
+  "Spain": {
+    "text": "The Spanish royal household explains that Charles III commissioned a more readily distinguishable naval ensign in 1785. The red-yellow-red design later became the national flag.",
+    "source_name": "Spanish Royal Household, Symbols of State",
+    "url": "https://www.casareal.es/EN/corona/Paginas/simbolos.aspx",
+    "scope": "Purpose and origin of the design; this source does not assign a separate symbolic meaning to each color."
+  }
+}

@@ -1,0 +1,72 @@
+[
+  {
+    "country": "Abkhazia",
+    "file": "abkhazia.png",
+    "title": "Flag of the Republic of Abkhazia.svg",
+    "page": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Republic_of_Abkhazia.svg",
+    "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/Flag_of_the_Republic_of_Abkhazia.svg/330px-Flag_of_the_Republic_of_Abkhazia.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "artist": "Drawn by User:Achim1999",
+    "license": "Public domain",
+    "license_url": ""
+  },
+  {
+    "country": "Afghanistan",
+    "file": "afghanistan-emirate.png",
+    "title": "Flag of the Taliban.svg",
+    "page": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Taliban.svg",
+    "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_the_Taliban.svg/330px-Flag_of_the_Taliban.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "artist": "Original: Taliban Vector: Lexicon",
+    "license": "Public domain",
+    "license_url": ""
+  },
+  {
+    "country": "Northern Cyprus",
+    "file": "northern-cyprus.png",
+    "title": "Flag of the Turkish Republic of Northern Cyprus.svg",
+    "page": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Turkish_Republic_of_Northern_Cyprus.svg",
+    "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1e/Flag_of_the_Turkish_Republic_of_Northern_Cyprus.svg/330px-Flag_of_the_Turkish_Republic_of_Northern_Cyprus.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "artist": "See File History , below for details.",
+    "license": "Public domain",
+    "license_url": ""
+  },
+  {
+    "country": "Somaliland",
+    "file": "somaliland.png",
+    "title": "Flag of Somaliland.svg",
+    "page": "https://commons.wikimedia.org/wiki/File:Flag_of_Somaliland.svg",
+    "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/Flag_of_Somaliland.svg/330px-Flag_of_Somaliland.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "artist": "Government of Somaliland",
+    "license": "Public domain",
+    "license_url": ""
+  },
+  {
+    "country": "South Ossetia",
+    "file": "south-ossetia.png",
+    "title": "Flag of South Ossetia.svg",
+    "page": "https://commons.wikimedia.org/wiki/File:Flag_of_South_Ossetia.svg",
+    "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/Flag_of_South_Ossetia.svg/330px-Flag_of_South_Ossetia.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "artist": "Various",
+    "license": "Public domain",
+    "license_url": ""
+  },
+  {
+    "country": "Transnistria",
+    "file": "transnistria.png",
+    "title": "Flag of Transnistria (state).svg",
+    "page": "https://commons.wikimedia.org/wiki/File:Flag_of_Transnistria_(state).svg",
+    "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_Transnistria_%28state%29.svg/330px-Flag_of_Transnistria_%28state%29.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "artist": "See File history (below) for details.",
+    "license": "Public domain",
+    "license_url": ""
+  },
+  {
+    "country": "Costa Rica",
+    "file": "costa-rica-state.png",
+    "title": "Flag of Costa Rica (state).svg",
+    "page": "https://commons.wikimedia.org/wiki/File:Flag_of_Costa_Rica_(state).svg",
+    "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_Costa_Rica_%28state%29.svg/330px-Flag_of_Costa_Rica_%28state%29.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "artist": "See File history below for details.",
+    "license": "Public domain",
+    "license_url": ""
+  }
+]

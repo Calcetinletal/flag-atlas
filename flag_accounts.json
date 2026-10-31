@@ -1,0 +1,1596 @@
+{
+  "Abkhazia": {
+    "status": "no_profile"
+  },
+  "Afghanistan": {
+    "status": "variant_conflict"
+  },
+  "Albania": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/al.json",
+    "source_name": "Albania",
+    "source_sha256": "ff3b825d87dcf0be08648971edc310e5ee4ba85e62568cc0bf79bbc6fb53f81d",
+    "kind": "meaning",
+    "excerpt": "Albanians traditionally see themselves as descendants of the eagle; they refer to themselves as \"Shqiptare,\" which translates as \"sons of the eagle\""
+  },
+  "Algeria": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/ag.json",
+    "source_name": "Algeria",
+    "source_sha256": "17d654eddd14bd5a5bc8f8c05cc4f3de26f33c7063bc67bac60855fd3470924f",
+    "kind": "meaning",
+    "excerpt": "the colors represent Islam (green), purity and peace (white), and liberty (red); the crescent and star are also Islamic symbols, but the crescent…"
+  },
+  "Andorra": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/an.json",
+    "source_name": "Andorra",
+    "source_sha256": "105f88acb59ed96c29efc81e5ec07d5ce690b2e6f1cdb0dcd61894817dc94cbe",
+    "kind": "meaning",
+    "excerpt": "the flag combines the blue and red French colors with the red and yellow of Spain to symbolize Franco-Spanish protection"
+  },
+  "Angola": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/ao.json",
+    "source_name": "Angola",
+    "source_sha256": "d91341ae0e95a042e92c9cc15065f1449da9326084bed06495d3bf8ef83bb1da",
+    "kind": "meaning",
+    "excerpt": "red stands for liberty and black for the African continent; the emblem symbolizes workers and peasants"
+  },
+  "Antigua and Barbuda": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/ac.json",
+    "source_name": "Antigua and Barbuda",
+    "source_sha256": "32522db9182e04580e0198738124f84decdb42445d2acaf4780d366c4cc8ac50",
+    "kind": "meaning",
+    "excerpt": "the sun stands for the dawn of a new era, black for the African heritage of most of the population, blue for hope,…"
+  },
+  "Argentina": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/south-america/ar.json",
+    "source_name": "Argentina",
+    "source_sha256": "9e960f01e7e612ca18395fcbb99bfe75feec59132638e274a30244def526dcfe",
+    "kind": "meaning",
+    "excerpt": "the colors represent the clear skies and snow of the Andes Mountains; the sun commemorates the first mass demonstration in favor of independence…"
+  },
+  "Armenia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-asia/am.json",
+    "source_name": "Armenia",
+    "source_sha256": "74a8030c026a2dc0065a5c27cb16fc10904781704b710b81c44ec030038cf2fb",
+    "kind": "meaning",
+    "excerpt": "red stands for the blood shed for liberty, blue for the Armenian skies and hope, and orange for the land and the courage…"
+  },
+  "Australia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/australia-oceania/as.json",
+    "source_name": "Australia",
+    "source_sha256": "f13dbb236fb3a6a15f3bde24b54a3f1579248b714f5e05486a452f0c6813bb40",
+    "kind": "meaning",
+    "excerpt": "the largest star is known as the Commonwealth or Federation Star and represents the federation of the Australian colonies in 1901; the star…"
+  },
+  "Austria": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/au.json",
+    "source_name": "Austria",
+    "source_sha256": "9f5a7b95a4945da944d0cb37b79cf6d9db35020c535ab8f0054c75b12434ec72",
+    "kind": "history",
+    "excerpt": "one of the oldest national flags in the world; according to tradition, after a fierce battle in the Third Crusade in 1191, Duke…"
+  },
+  "Azerbaijan": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-asia/aj.json",
+    "source_name": "Azerbaijan",
+    "source_sha256": "c50e594d8ca7b675ea9b4a42fbfc28f0847d27f1c5ee6d0065e434697e6e6c50",
+    "kind": "meaning",
+    "excerpt": "the blue band stands for Azerbaijan's Turkic heritage, red for modernization and progress, and green for Islam; the crescent moon and star are…"
+  },
+  "Bahamas": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/bf.json",
+    "source_name": "The Bahamas",
+    "source_sha256": "d622a6c30c8785bba75951a8e77e052cca5763483f3859ffb6d0a9670c69da90",
+    "kind": "meaning",
+    "excerpt": "the band colors represent the islands' golden beaches surrounded by the aquamarine sea; black stands for the vigor and force of a united…"
+  },
+  "Bahrain": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/middle-east/ba.json",
+    "source_name": "Bahrain",
+    "source_sha256": "1839eb844aec75baf4422ac2b3034df68a5f2ed9a0d9e1c7618b1cf361e4c6c6",
+    "kind": "meaning",
+    "excerpt": "red is the traditional color for flags of Persian Gulf states; the five points represent the five pillars of Islam"
+  },
+  "Bangladesh": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/south-asia/bg.json",
+    "source_name": "Bangladesh",
+    "source_sha256": "84627367678c0d9cf26e4a22d0fdba95425e26ebdaf001a323d4417d54b74df0",
+    "kind": "meaning",
+    "excerpt": "the red disk represents the rising sun and the sacrifice to achieve independence; the green field symbolizes the lush vegetation of Bangladesh"
+  },
+  "Barbados": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/bb.json",
+    "source_name": "Barbados",
+    "source_sha256": "f2e2a5c9cd40fb3bb32fdb1304fb3cd56e692dca95f74ebe37feb24c16a3acb9",
+    "kind": "meaning",
+    "excerpt": "blue stands for the sea and sky, and gold for the beaches; the trident head represents independence and a break with the past"
+  },
+  "Belarus": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/bo.json",
+    "source_name": "Belarus",
+    "source_sha256": "9fb299ada2688dce3a5be147e0a6c694144641faa5424ec0d3d9526b3bc13b94",
+    "kind": "meaning",
+    "excerpt": "the red stands for past struggles to escape oppression, and the green for hope and the country's forests"
+  },
+  "Belgium": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/be.json",
+    "source_name": "Belgium",
+    "source_sha256": "fd2a3cb76582863b47fd95bb9ae743e9fa3df76e2e9f3f43f282d59ec5d49051",
+    "kind": "history",
+    "excerpt": "the vertical design was based on the flag of France; the colors are from the arms of the duchy of Brabant (yellow lion…"
+  },
+  "Belize": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/bh.json",
+    "source_name": "Belize",
+    "source_sha256": "d4da87c04574a6e30e66452f6b45e3cb3d121e2bd02b502ca1500ade0fcd35ae",
+    "kind": "meaning",
+    "excerpt": "the figures, the mahogany tree, and the garland refer to the logging industry that led the British to settle Belize; blue and red…"
+  },
+  "Benin": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/bn.json",
+    "source_name": "Benin",
+    "source_sha256": "fd64d50e971da22978cded737b031d16371bd262627aed8f09e381ae75c97e3d",
+    "kind": "meaning",
+    "excerpt": "green stands for hope and revival, yellow for wealth, and red for courage"
+  },
+  "Bhutan": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/south-asia/bt.json",
+    "source_name": "Bhutan",
+    "source_sha256": "082dd98dccd7c8a667d81bed3fa48c814e29fe290d37bc42e85d6cf56d6e397e",
+    "kind": "meaning",
+    "excerpt": "white stands for purity, and the jewels in the dragon's claws symbolize wealth; the background colors represent the spiritual and secular powers in…"
+  },
+  "Bolivia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/south-america/bl.json",
+    "source_name": "Bolivia",
+    "source_sha256": "1703e87daa7aa193c741e6c44972da9fedeb97aa31ca532ab4806fe6cd4400e9",
+    "kind": "meaning",
+    "excerpt": "red stands for bravery and the blood of national heroes, yellow for the nation's mineral resources, and green for the land's fertility"
+  },
+  "Bosnia and Herzegovina": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/bk.json",
+    "source_name": "Bosnia and Herzegovina",
+    "source_sha256": "4b5dffea5eb9806cfeca89fc96d0e29dfe5bf52d81a0dd2b93e8e6d1c2e276ac",
+    "kind": "meaning",
+    "excerpt": "the triangle approximates the country's shape, and its three points stand for the Bosniaks, Croats, and Serbs; the stars represent Europe; the colors…"
+  },
+  "Botswana": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/bc.json",
+    "source_name": "Botswana",
+    "source_sha256": "d50db8fddf55ef92542fef29f9d119a5fa5968e0e8f079f4a73e14f3dd56cbfd",
+    "kind": "meaning",
+    "excerpt": "the blue symbolizes rainwater, and the black and white bands represent racial harmony"
+  },
+  "Brazil": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/south-america/br.json",
+    "source_name": "Brazil",
+    "source_sha256": "e9ec91597184c938cc4a325a146e31570bec58d74101effd5cec6b0a4d43de1b",
+    "kind": "meaning",
+    "excerpt": "green stands for the country's forests, and yellow for its mineral wealth, with the diamond representing the country's shape; the blue globe and…"
+  },
+  "Brunei": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/east-n-southeast-asia/bx.json",
+    "source_name": "Brunei",
+    "source_sha256": "fdfbd98fe33c18d01d4007316c8cb9632c24ae11ddd096f3ab556ce928e98bb6",
+    "kind": "meaning",
+    "excerpt": "yellow symbolizes the sultanate, and the white and black bands stand for the chief ministers; the emblem includes a royal umbrella (the monarchy),…"
+  },
+  "Bulgaria": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/bu.json",
+    "source_name": "Bulgaria",
+    "source_sha256": "fad31b77dfee1c72ed2759bbeae7749383ac2a9e84a282a37d2954b56d7fcb0f",
+    "kind": "meaning",
+    "excerpt": "white stands for peace, love, and freedom; green for the country's agricultural wealth; red for the independence struggle and military courage"
+  },
+  "Burkina Faso": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/uv.json",
+    "source_name": "Burkina Faso",
+    "source_sha256": "65ad4cb683b90b26d97ae7fabf3e0d8b3ab64370e5f8f7309b2e1d34c9fb32cf",
+    "kind": "meaning",
+    "excerpt": "red stands for the country's struggle for independence, green for hope and abundance, and yellow for the country's mineral wealth"
+  },
+  "Burundi": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/by.json",
+    "source_name": "Burundi",
+    "source_sha256": "fff3fcb3a295f8c34fdaba64d208cb535957c1a8fe19e36e4b64f58e8649ca14",
+    "kind": "meaning",
+    "excerpt": "green stands for hope and optimism, white for purity and peace, and red for the blood shed in the struggle for independence; the…"
+  },
+  "Cabo Verde": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/cv.json",
+    "source_name": "Cabo Verde",
+    "source_sha256": "cf82efe0a87e07922e55c80de3d4ddd29ae3c96d7a96a1cd3a9c3ad5ffdd8fe0",
+    "kind": "meaning",
+    "excerpt": "blue stands for the sea and sky; the stripes symbolize the country's formation through peace (white) and effort (red); the stars represent the…"
+  },
+  "Cambodia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/east-n-southeast-asia/cb.json",
+    "source_name": "Cambodia",
+    "source_sha256": "972de9397c3cdec6f4cb552f9f09e0ddd9c1bd09a41897718416effc9611ac08",
+    "kind": "meaning",
+    "excerpt": "red and blue are traditional Cambodian colors"
+  },
+  "Cameroon": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/cm.json",
+    "source_name": "Cameroon",
+    "source_sha256": "0d0d3ef94d26732a0658d36bd78f94a146b23c6afbcfcd328da9a30c99acdcb9",
+    "kind": "meaning",
+    "excerpt": "red stands for unity; yellow for the sun, happiness, and the northern savannahs; green for hope and the southern forests; the star is…"
+  },
+  "Canada": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/north-america/ca.json",
+    "source_name": "Canada",
+    "source_sha256": "59b01d0e322ac802fa002b2c1f620745d2154629603fac4c20f926bfc00bdd53",
+    "kind": "meaning",
+    "excerpt": "the maple leaf is a national symbol"
+  },
+  "Central African Republic": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/ct.json",
+    "source_name": "none",
+    "source_sha256": "fe1db14772072fe82100f4e49fa88dc15a512e8a96f210f8a0590b806fac9cb3",
+    "kind": "meaning",
+    "excerpt": "combines the pan-African and French flag colors; red stands for blood spilled in the struggle for independence, blue for the sky and freedom,…"
+  },
+  "Chad": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/cd.json",
+    "source_name": "Chad",
+    "source_sha256": "37168c7d27cb4ddc611d2f123525d2d1192d1c71d72866070bb2ce4ab40fdb1a",
+    "kind": "meaning",
+    "excerpt": "combines the blue and red French (former colonial) colors with the red and yellow Pan-African colors; blue stands for the sky, hope, and…"
+  },
+  "Chile": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/south-america/ci.json",
+    "source_name": "Chile",
+    "source_sha256": "e9b75c7c9be2a89b4cda45135bb1d2551761dc3d405d74cce3059b732fdf8653",
+    "kind": "meaning",
+    "excerpt": "the star represents a guide to progress and honor; blue stands for the sky, white for the Andes Mountains, and red for the…"
+  },
+  "China": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/east-n-southeast-asia/ch.json",
+    "source_name": "China",
+    "source_sha256": "2a716db51c04e2ddd3de01b4de03638e7e09f5f414f64cde842e9faddf2140b6",
+    "kind": "meaning",
+    "excerpt": "red represents revolution; the stars symbolize the four social classes -- the working class, the peasantry, the urban petty bourgeoisie, and the national…"
+  },
+  "Colombia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/south-america/co.json",
+    "source_name": "Colombia",
+    "source_sha256": "5094a6162f895146336178626499800f91d63fa893c59d8626b7a8d3a2aba55d",
+    "kind": "meaning",
+    "excerpt": "various interpretations of the colors exist; one has yellow for the gold in Colombia's land, blue for the sea, and red for the…"
+  },
+  "Comoros": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/cn.json",
+    "source_name": "Comoros",
+    "source_sha256": "ccc6f32ab1cac0f92b70340baa5371f9d7f007fe6399212750e8b9f8a1238671",
+    "kind": "meaning",
+    "excerpt": "the horizontal bands and the stars represent the four main islands of the archipelago -- Mwali, N'gazidja, Ndzuwani, and Mahore (Mayotte is a…"
+  },
+  "Cook Islands": {
+    "status": "profile_only",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/australia-oceania/cw.json",
+    "source_name": "Cook Islands",
+    "source_sha256": "f21cc0e48d44134227914a0e41530266ad6e66a2e8aee484dcd1410ad9757303"
+  },
+  "Costa Rica": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/cs.json",
+    "source_name": "Costa Rica",
+    "source_sha256": "48db2f4e6656eeda0472225b73cc523d9d01a89276eba5d015b32311f892c916",
+    "kind": "meaning",
+    "excerpt": "the blue is said to stand for the sky, opportunity, and perseverance; the white for peace, happiness, and wisdom; and the red for…"
+  },
+  "Côte d'Ivoire": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/iv.json",
+    "source_name": "Côte d'Ivoire",
+    "source_sha256": "5f9ca66eb5aa8245881561a62d79a6790641b75150aac9b6cc049187f4b4663d",
+    "kind": "meaning",
+    "excerpt": "orange stands for the savannah and fertility, white for peace and unity, green for the forests of the south and the hope for…"
+  },
+  "Croatia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/hr.json",
+    "source_name": "Croatia",
+    "source_sha256": "d9a5e26728b021b354ff8db14694dbf57f76121182aabcc13cd1782ebb3c6604",
+    "kind": "meaning",
+    "excerpt": "the small shields represent the five historic regions (from left to right): Croatia, Dubrovnik, Dalmatia, Istria, and Slavonia"
+  },
+  "Cuba": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/cu.json",
+    "source_name": "Cuba",
+    "source_sha256": "917099005e0599d0d555d44333b89399a630068713aa04e5471ee6ec2fcf6305",
+    "kind": "meaning",
+    "excerpt": "the blue bands stand for the islands' three former departments: Central, Occidental, and Oriental; the white bands for the purity of the independence…"
+  },
+  "Cyprus": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/cy.json",
+    "source_name": "Cyprus",
+    "source_sha256": "3de2609755593cfcb2fe8825fe430497f0f68bbdcb90d974050d32d044800b6c",
+    "kind": "meaning",
+    "excerpt": "the olive branches symbolize hope for peace and reconciliation between the Greek and Turkish communities"
+  },
+  "Czechia": {
+    "status": "profile_only",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/ez.json",
+    "source_name": "Czechia",
+    "source_sha256": "98ff8a1e07186039a77faba7c96d543b293a9eee75bef22b592bdbcfa25fa530"
+  },
+  "Democratic Republic of the Congo": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/cg.json",
+    "source_name": "DRC",
+    "source_sha256": "773654d968b3cd24d3a83e79065f7567c7069ff847f0be72dc1b4e85f1c9d958",
+    "kind": "meaning",
+    "excerpt": "blue stands for peace and hope, red for the blood of the country's martyrs, and yellow for the country's wealth and prosperity; the…"
+  },
+  "Denmark": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/da.json",
+    "source_name": "Denmark",
+    "source_sha256": "35d9f1e7466b75903edca4160acac5c6f10c31ff5d0cdbc02b77d0da1e1dd14c",
+    "kind": "history",
+    "excerpt": "referred to as the Dannebrog (Danish flag) and is one of the oldest national flags in the world; the origin of the design…"
+  },
+  "Djibouti": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/dj.json",
+    "source_name": "Djibouti",
+    "source_sha256": "8933fbd3c7395924a28e785c2c6e2ab95a1722a90eea6768915d4af034007ae9",
+    "kind": "meaning",
+    "excerpt": "blue stands for sea, sky, and the Issa Somali people, green for earth and the Afar people, and white for peace; the red…"
+  },
+  "Dominica": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/do.json",
+    "source_name": "Dominica",
+    "source_sha256": "d84383037ff1654212f5b11961fbbd4fd250aa72385e6084cf631eb74b8aaa6b",
+    "kind": "meaning",
+    "excerpt": "the stars represent the 10 administrative divisions (parishes); green symbolizes the island's lush vegetation; the tricolor cross represents the Christian Trinity; yellow stands…"
+  },
+  "Dominican Republic": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/dr.json",
+    "source_name": "The Dominican",
+    "source_sha256": "06daa08e9a4cb3fe5a8dc7488a54a0d39d49efb2042e276f448eb47f0cef6c88",
+    "kind": "meaning",
+    "excerpt": "blue stands for liberty, white for salvation, and red for the blood of heroes"
+  },
+  "Ecuador": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/south-america/ec.json",
+    "source_name": "Ecuador",
+    "source_sha256": "1356ed14e7e108fa0e7b08311166242dede42827d78888f1c6d05abccf40c38d",
+    "kind": "meaning",
+    "excerpt": "yellow stands for sunshine, grain, and mineral wealth; blue for the sky, sea, and rivers; red for patriots' blood spilled in the struggle…"
+  },
+  "Egypt": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/eg.json",
+    "source_name": "Egypt",
+    "source_sha256": "24da5422db36ea2a78e44afe1983379241b56be3d1f29b94da4f30cabfd3b7b8",
+    "kind": "meaning",
+    "excerpt": "the band colors derive from the Arab Liberation flag and represent oppression (black) overcome through bloody struggle (red), to be replaced by a…"
+  },
+  "El Salvador": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/es.json",
+    "source_name": "El Salvador",
+    "source_sha256": "9c43421343dcb156b66d225f75e031c045df97a8eba0e52be01d8d6cd03c7c6b",
+    "kind": "meaning",
+    "excerpt": "the blue bands stand for the Pacific Ocean and the Caribbean Sea, and the white for the land, as well as peace and…"
+  },
+  "Equatorial Guinea": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/ek.json",
+    "source_name": "Equatorial Guinea",
+    "source_sha256": "27ff4d90a9e2ebf0df13748a991f0f5cf166ea8a88f2b573ceb322fa83708c62",
+    "kind": "meaning",
+    "excerpt": "green stands for the jungle and natural resources, blue for the sea, white for peace, and red for the fight for independence"
+  },
+  "Eritrea": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/er.json",
+    "source_name": "Eritrea",
+    "source_sha256": "804d9b029d8a28a24e0ab4206444cab3799d2668f3af2af9b844bd41861330af",
+    "kind": "meaning",
+    "excerpt": "green stands for the country's agriculture economy, red for the blood shed in the fight for freedom, and blue for the sea's bounty;…"
+  },
+  "Estonia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/en.json",
+    "source_name": "Estonia",
+    "source_sha256": "90fdcbd9fac2090722818b5d24e49b196ea9a363fea1df0a384953b9026b98fa",
+    "kind": "meaning",
+    "excerpt": "blue stands for faith, loyalty, and devotion, and also the sky, sea, and lakes; black for the country's soil and the Estonian people's…"
+  },
+  "Eswatini": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/wz.json",
+    "source_name": "Eswatini",
+    "source_sha256": "390346c2aca0a98d6cccf701ee3d9b4eb329e4d907c64a5f274c37310427a599",
+    "kind": "meaning",
+    "excerpt": "blue stands for peace and stability, red for past struggles, and yellow for the mineral resources of the country; the shield, spears, and…"
+  },
+  "Ethiopia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/et.json",
+    "source_name": "Ethiopia",
+    "source_sha256": "895d5f44a372770d78f58bb77a51dd9a79e9af26f124b0e595c0c3e0ba77e30d",
+    "kind": "meaning",
+    "excerpt": "green stands for hope and the land's fertility, yellow for justice and harmony, and red for sacrifice and heroism; the blue of the…"
+  },
+  "Fiji": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/australia-oceania/fj.json",
+    "source_name": "Fiji",
+    "source_sha256": "7b41d50379d03c793ecdc27537529bb7f2e0cf2970c1057a6f8d46a8debd4961",
+    "kind": "meaning",
+    "excerpt": "blue symbolizes the Pacific Ocean"
+  },
+  "Finland": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/fi.json",
+    "source_name": "Finland",
+    "source_sha256": "1781548648a242100ffc93e6f5456b6de72019b6118d470bc2b4f203d74839c1",
+    "kind": "meaning",
+    "excerpt": "the blue stands for the country's thousands of lakes, and the white for snow"
+  },
+  "France": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/fr.json",
+    "source_name": "France",
+    "source_sha256": "c5d1106d08f85f374175dfb64daa1799b71519f606df7b56ec60308ba013909c",
+    "kind": "history",
+    "excerpt": "known as the le tricolore (tricolor), the flag dates to 1790 and the French Revolution, when the traditional color of white was combined…"
+  },
+  "Gabon": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/gb.json",
+    "source_name": "Gabon",
+    "source_sha256": "ac34748266c50fa4427bd21b2c08a6e73e8a8b7f8f1acf2f427819cc03ae4203",
+    "kind": "meaning",
+    "excerpt": "green stands for the country's forests and natural resources, gold for the equator and the sun, and blue for the sea"
+  },
+  "Gambia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/ga.json",
+    "source_name": "The Gambia",
+    "source_sha256": "f9f789f590ed05c7708875f7113a84321a94c6867e138577ece1eb923cb3faca",
+    "kind": "meaning",
+    "excerpt": "red stands for the sun and the savannah, blue for the Gambia River, and green for forests and agriculture; the white stripes denote…"
+  },
+  "Georgia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-asia/gg.json",
+    "source_name": "Georgia",
+    "source_sha256": "bb0012c2e163e46384f736fcd73c9c78c8f62802401b4351f9076fba2849e161",
+    "kind": "history",
+    "excerpt": "sometimes referred to as the Five-Cross Flag, the design is based on a 14th-century banner of the Kingdom of Georgia"
+  },
+  "Germany": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/gm.json",
+    "source_name": "Germany",
+    "source_sha256": "b540efd0548d24780080613164df770b86ed478fd0f2ac0066a7002444da4cf8",
+    "kind": "history",
+    "excerpt": "the colors can be traced back to the medieval banner of the Holy Roman Emperor -- a black eagle with red claws and…"
+  },
+  "Ghana": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/gh.json",
+    "source_name": "Ghana",
+    "source_sha256": "5256f329a00ac29eed62fd981b1800568867ac7091e4143270a70b10c2437564",
+    "kind": "meaning",
+    "excerpt": "red stands for the blood shed for independence, yellow for the country's mineral wealth, and green for its forests and natural wealth; the…"
+  },
+  "Greece": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/gr.json",
+    "source_name": "Greece",
+    "source_sha256": "4f7efb94a10e9c2894fbc0a6b03928663234505e505c234cc0a87c13a6ad1498",
+    "kind": "meaning",
+    "excerpt": "the cross symbolizes Greek Orthodoxy, the established religion; there is no set meaning for the stripes and colors"
+  },
+  "Grenada": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/gj.json",
+    "source_name": "Grenada",
+    "source_sha256": "1dd783e5c87725e8320fbd7ba141508b05b0444d3529c02d557a8ec176183bfd",
+    "kind": "meaning",
+    "excerpt": "the seven stars stand for the country's administrative divisions, with the central star symbolizing the capital, St. George's; yellow stands for the sun…"
+  },
+  "Guatemala": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/gt.json",
+    "source_name": "Guatemala",
+    "source_sha256": "d12d0fcaef02c3dff1de3e5e1b424c6e521ffa627bc3413322fcc00cb7fcc2f9",
+    "kind": "meaning",
+    "excerpt": "the rifles stand for Guatemala's willingness to defend itself, the swords for honor, and the laurel wreath for victory; blue stands for the…"
+  },
+  "Guinea": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/gv.json",
+    "source_name": "Guinea",
+    "source_sha256": "bc920c7ae85b8cc8e96cd9965b72ff61d8cd80f601ce42bf9849c2beba354897",
+    "kind": "meaning",
+    "excerpt": "red stands for the people's sacrifice for liberation and work; yellow for the sun, the riches of the earth, and justice; green for…"
+  },
+  "Guinea-Bissau": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/pu.json",
+    "source_name": "Guinea-Bissau",
+    "source_sha256": "1f6ee3fa9b194385bbe7c4282ba9d14d82e45d8786255e5d52d5cab3286530c6",
+    "kind": "meaning",
+    "excerpt": "yellow stands for the sun, green for hope, red for blood shed during the struggle for independence; the black star stands for African…"
+  },
+  "Guyana": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/south-america/gy.json",
+    "source_name": "Guyana",
+    "source_sha256": "d407583d0d18ce487dad1c8d0b82607bfa17918f0c13b294e57bd65c756d39c2",
+    "kind": "meaning",
+    "excerpt": "green stands for forest and foliage, yellow for mineral resources and a bright future, white for the rivers, red for zeal and the…"
+  },
+  "Haiti": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/ha.json",
+    "source_name": "Haiti",
+    "source_sha256": "84f7be798c70520e60d7c6bb0c10d388e24c18850809dd533626f4d5010ba17a",
+    "kind": "meaning",
+    "excerpt": "the colors are taken from the French flag and represent the union of ethnic groups"
+  },
+  "Honduras": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/ho.json",
+    "source_name": "Honduras",
+    "source_sha256": "f4983b8ec1c4756456d6b6fb2de0f237e08d231be642146afd35162391da80a2",
+    "kind": "meaning",
+    "excerpt": "the stars represent the members of the former Federal Republic of Central America: Costa Rica, El Salvador, Guatemala, Honduras, and Nicaragua; blue stands…"
+  },
+  "Hungary": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/hu.json",
+    "source_name": "Hungary",
+    "source_sha256": "6df9a3e18ba5bbf84c52560a05e93bb3b1a699641922f941704ec578142d2cf7",
+    "kind": "meaning",
+    "excerpt": "folklore attributes virtues to the colors: red for strength, white for faithfulness, and green for hope; alternatively, the red can stand for the…"
+  },
+  "Iceland": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/ic.json",
+    "source_name": "Iceland",
+    "source_sha256": "bf4e6935aa9de6c0272844177daa3bf8cf073d3c6de71e12ec5e4b395bb25c2b",
+    "kind": "meaning",
+    "excerpt": "red stands for the island's volcanic fires, white for the snow and ice fields, and blue for the ocean"
+  },
+  "India": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/south-asia/in.json",
+    "source_name": "India",
+    "source_sha256": "01b7d4c2b5fff2c8ef1cb2b0933a8eecfca5fb94cb9478c783e9b649f44a75dd",
+    "kind": "meaning",
+    "excerpt": "saffron stands for courage, sacrifice, and the spirit of renunciation; white for purity and truth; green for faith and fertility; the chakra symbolizes…"
+  },
+  "Indonesia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/east-n-southeast-asia/id.json",
+    "source_name": "Indonesia",
+    "source_sha256": "07f4422aad6d3010605e30542e94deaa24c12817209543b277694b4929b8668b",
+    "kind": "meaning",
+    "excerpt": "red stands for courage and white for purity"
+  },
+  "Iran": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/middle-east/ir.json",
+    "source_name": "Iran",
+    "source_sha256": "38b035f8e5b5279f28166b9b47d2d73207fd700e5d6be7b42222d36567b8c52d",
+    "kind": "meaning",
+    "excerpt": "green is the color of Islam and also represents growth, white stands for honesty and peace, and red for bravery and martyrdom"
+  },
+  "Iraq": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/middle-east/iz.json",
+    "source_name": "Iraq",
+    "source_sha256": "dfab210a5286e6c26b5a2a029bdc9243ebf3d4b9cc2f3d4d66343bdc8804111c",
+    "kind": "meaning",
+    "excerpt": "the colors come from the Arab Liberation flag and stand for oppression (black) overcome through bloody struggle (red), to be replaced by a…"
+  },
+  "Ireland": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/ei.json",
+    "source_name": "Ireland",
+    "source_sha256": "b0d09e606b8ef36f8d390dccdd4e875fe1de134cd1f144dab598adfb6e0e251a",
+    "kind": "meaning",
+    "excerpt": "the flag colors have no official meaning, but a common interpretation is that the green stands for the Irish nationalist tradition, orange for…"
+  },
+  "Israel": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/middle-east/is.json",
+    "source_name": "Israel",
+    "source_sha256": "795e3676c8aced2c3235c79bf32389f739883a89ee45c54c1c9486e7b49cc5ff",
+    "kind": "history",
+    "excerpt": "the design resembles a traditional Jewish prayer shawl ( tallit ), which is white with blue stripes; the hexagram as a Jewish symbol…"
+  },
+  "Italy": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/it.json",
+    "source_name": "Italy",
+    "source_sha256": "c7f38105d116e944cd9037f2e2907a960ea01d3b2c92a580c284a762cd25b06c",
+    "kind": "meaning",
+    "excerpt": "colors are those of Milan (red and white) combined with the green uniform color of the Milanese civic guard"
+  },
+  "Jamaica": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/jm.json",
+    "source_name": "Jamaica",
+    "source_sha256": "dd819a5819217f6deee7288f59bcbd56b5ab233742dc4b113eb6c953a2436285",
+    "kind": "meaning",
+    "excerpt": "green stands for hope, vegetation, and agriculture; black for hardships overcome and to be faced; and yellow for sunshine and natural resources"
+  },
+  "Japan": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/east-n-southeast-asia/ja.json",
+    "source_name": "Japan",
+    "source_sha256": "a5ff800a4c7e1e39225f23d079cd3fae12520d9bd73706c00958bebf3acd7186",
+    "kind": "history",
+    "excerpt": "the current flag was adopted in 1854, but a sun flag has been in use in Japan since at least 1184; the sun…"
+  },
+  "Jordan": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/middle-east/jo.json",
+    "source_name": "Jordan",
+    "source_sha256": "9b8309289ae587bd0085f4259df1ecbc2c8b95d43ef4cdf671ea14c1a670f502",
+    "kind": "meaning",
+    "excerpt": "black stands for the Abbassid Caliphate, white for the Ummayyad Caliphate, and green for the Fatimid Caliphate; the triangle stands for the Great…"
+  },
+  "Kazakhstan": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-asia/kz.json",
+    "source_name": "Kazakhstan",
+    "source_sha256": "7aec672d70dd465e097af3d62a58f4875cda137cb563eaa74b7a7d2468987e92",
+    "kind": "meaning",
+    "excerpt": "the blue color has religious significance for the Turkic peoples and symbolizes cultural and ethnic unity, as well as sky and water; the…"
+  },
+  "Kenya": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/ke.json",
+    "source_name": "Kenya",
+    "source_sha256": "b70f6a693b57f9b28f97995273446234032e05cd39782b6efd9ec7061d53fdf3",
+    "kind": "meaning",
+    "excerpt": "black stands for the majority population, red for the blood shed in the struggle for freedom, green for natural wealth, and white for…"
+  },
+  "Kiribati": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/australia-oceania/kr.json",
+    "source_name": "Kiribati",
+    "source_sha256": "2c443b57415abdf3951c28cdb47c396104db08b2766a6f9c3252c02dd539cbad",
+    "kind": "meaning",
+    "excerpt": "the white stripes represent the Gilbert, Line, and Phoenix island groups; the 17 rays of the sun represent the 16 Gilbert Islands and…"
+  },
+  "Kosovo": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/kv.json",
+    "source_name": "Kosovo",
+    "source_sha256": "a03ea1b88c572269932f2e68da78ffc6d5810766defde6d585b0887efe24623d",
+    "kind": "meaning",
+    "excerpt": "each star represents one of the major ethnic groups of Kosovo: Albanians, Serbs, Turks, Gorani, Roma, and Bosniaks"
+  },
+  "Kuwait": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/middle-east/ku.json",
+    "source_name": "Kuwait",
+    "source_sha256": "5d6c43ff9ada4254a18b0eb0c048fb6d446ccfd4bf73cddcecb710f18fb345c6",
+    "kind": "meaning",
+    "excerpt": "green stands for fertile fields, white for purity, red for blood on Kuwaiti swords, and black for defeating the enemy"
+  },
+  "Kyrgyzstan": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-asia/kg.json",
+    "source_name": "Kyrgyzstan",
+    "source_sha256": "20a6dccc4f3761a0539fcd7b64bca0d7f8d2f722108b25141ad81529da9c8e9e",
+    "kind": "meaning",
+    "excerpt": "the sun's rays represent the Kyrgyz tribes; red stands for bravery and valor, and the sun for peace and wealth"
+  },
+  "Laos": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/east-n-southeast-asia/la.json",
+    "source_name": "Laos",
+    "source_sha256": "fed8c620461eae8844b9566c582e9cb90a56f50fbbd696a42fa5d688126a142b",
+    "kind": "meaning",
+    "excerpt": "red stands for the blood shed for liberation, and blue for the Mekong River and prosperity; the white disk represents the full moon…"
+  },
+  "Latvia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/lg.json",
+    "source_name": "Latvia",
+    "source_sha256": "27f700941e53ed5bdd61c94e722d776ccedd2a7723f1bad606c0e9393fb7edca",
+    "kind": "history",
+    "excerpt": "the flag is one of the older banners in the world -- a medieval chronicle mentions Latvian tribes using a red standard with…"
+  },
+  "Lebanon": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/middle-east/le.json",
+    "source_name": "Lebanon",
+    "source_sha256": "37f71848f2b28f7b439106c85aced0cba952bae996eb11cacf31b146778891c6",
+    "kind": "meaning",
+    "excerpt": "red stands for blood shed for liberation, and white for peace, the snow of the mountains, and purity; the green cedar tree is…"
+  },
+  "Lesotho": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/lt.json",
+    "source_name": "Lesotho",
+    "source_sha256": "2597087b1af42205c4e6a680249578a766188285b9f0a33aee8a9f5fe06816e3",
+    "kind": "meaning",
+    "excerpt": "blue stands for rain, white for peace, and green for prosperity"
+  },
+  "Liberia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/li.json",
+    "source_name": "Liberia",
+    "source_sha256": "9a87c0654b7f8228df5c69997938de7622cac90c87d5f43830fab2ebcb8ab303",
+    "kind": "meaning",
+    "excerpt": "the stripes stand for the signatories of the Liberian Declaration of Independence, the blue square for the African mainland, and the star for…"
+  },
+  "Libya": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/ly.json",
+    "source_name": "Libya",
+    "source_sha256": "79d955eeb57d33ac8a773439575bd57c117e7e47ab8b0609e042c55290cc9827",
+    "kind": "meaning",
+    "excerpt": "the colors represent the three major regions of the country: red stands for Fezzan, black for Cyrenaica, and green for Tripolitania; the crescent…"
+  },
+  "Liechtenstein": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/ls.json",
+    "source_name": "Liechtenstein",
+    "source_sha256": "75cb6252dceec8e5144584a4318515194c97db644bc17a432c444547b6e20b2e",
+    "kind": "history",
+    "excerpt": "the colors may derive from the blue-and-red livery used in the principality's household in the 18th century; the prince's crown was added in…"
+  },
+  "Lithuania": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/lh.json",
+    "source_name": "Lithuania",
+    "source_sha256": "b2da925eb498fc81153eb0ea00213bcc5f0322161dafb6148e0ebfe37de76ab4",
+    "kind": "meaning",
+    "excerpt": "yellow stands for golden fields, the sun, light, and goodness; green for the forests, nature, freedom, and hope; red for courage and the…"
+  },
+  "Luxembourg": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/lu.json",
+    "source_name": "Luxembourg",
+    "source_sha256": "e023bb6209c5db62beab8148bc9f33b4d24d134a1e339332d688e1f3fd08fb55",
+    "kind": "history",
+    "excerpt": "the colors are derived from the Grand Duke's coat of arms"
+  },
+  "Madagascar": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/ma.json",
+    "source_name": "Madagascar",
+    "source_sha256": "54f859aa83603b087c336ab19ff9725523be506dc11cf2685bf2a3930960e5c5",
+    "kind": "meaning",
+    "excerpt": "red stands for sovereignty, green for hope, and white for purity"
+  },
+  "Malawi": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/mi.json",
+    "source_name": "Malawi",
+    "source_sha256": "2380a372cb3f15eb428510a3810ff160dc18c29df8049909dcd52cb81a04727d",
+    "kind": "meaning",
+    "excerpt": "black stands for ethnic groups, red for the blood shed in the struggle for freedom, and green for nature; the sun represents the…"
+  },
+  "Malaysia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/east-n-southeast-asia/my.json",
+    "source_name": "Malaysia",
+    "source_sha256": "dd18b7a3e9e4ebd39cb7b605f0256c5ec5e47899edea954859774d80e66610e3",
+    "kind": "meaning",
+    "excerpt": "the flag is often called Jalur Gemilang (Stripes of Glory); the 14 stripes stand for the equal status of the 13 member states…"
+  },
+  "Maldives": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/south-asia/mv.json",
+    "source_name": "Maldives",
+    "source_sha256": "dd6bfd4e5fb797e5d3383ccab465669b070b7f6af5813c15ba6b56ea3c3b7add",
+    "kind": "meaning",
+    "excerpt": "red stands for those who have sacrificed their lives to defend the country, green for peace and prosperity, and the white crescent is…"
+  },
+  "Mali": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/ml.json",
+    "source_name": "Mali",
+    "source_sha256": "76c9d32eee51e4640772adcc10da1201257d201048516bbaeaf357a4d5f00745",
+    "kind": "history",
+    "excerpt": "uses the colors of the Pan-African movement"
+  },
+  "Malta": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/mt.json",
+    "source_name": "Malta",
+    "source_sha256": "9913bc9d41e1f601dc5e416e479a4092122038bdc1417a120c936d440ffaf271",
+    "kind": "history",
+    "excerpt": "according to legend, the colors come from the red-and-white checkered banner of Count Roger of Sicily, who removed a bicolored corner and granted…"
+  },
+  "Marshall Islands": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/australia-oceania/rm.json",
+    "source_name": "Marshall Islands",
+    "source_sha256": "99a50d30221aeeff32fc81307e3330a50edc39176221d73e1ef741719126c854",
+    "kind": "meaning",
+    "excerpt": "blue stands for the Pacific Ocean, orange for the Ralik Chain (or sunset and courage), and white for the Ratak Chain (or sunrise…"
+  },
+  "Mauritania": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/mr.json",
+    "source_name": "Mauritania",
+    "source_sha256": "1bd49afb3192ef9250b17c7ed2933854e59ca5e70cc0517f4a4f667514b152ef",
+    "kind": "meaning",
+    "excerpt": "the crescent, star, and color green are traditional symbols of Islam; green also represents hope for a bright future; yellow stands for the…"
+  },
+  "Mauritius": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/mp.json",
+    "source_name": "Mauritius",
+    "source_sha256": "beaf980681f5463c16cda2e65b7ff74f8825b4ee36cd01e3b6aa3265d8cb671b",
+    "kind": "meaning",
+    "excerpt": "red stands for self-determination and independence; blue for the Indian Ocean; yellow for the new light of independence, golden sunshine, or the bright…"
+  },
+  "Mexico": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/north-america/mx.json",
+    "source_name": "Mexico",
+    "source_sha256": "ba055c408b5bba549ac958a4c68f417429b3062e8a10ebcd32753b17fb5cee24",
+    "kind": "meaning",
+    "excerpt": "green stands for hope, joy, and love; white for peace and honesty; red for hardiness, bravery, strength, and valor"
+  },
+  "Micronesia (Federated States of)": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/australia-oceania/fm.json",
+    "source_name": "none",
+    "source_sha256": "9116e589d69b512a1dab6cb978826eafb1800df30652167afd8e7c496bdab5be",
+    "kind": "meaning",
+    "excerpt": "blue stands for the Pacific Ocean, and the stars for the four island groups of Chuuk, Kosrae, Pohnpei, and Yap"
+  },
+  "Moldova": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/md.json",
+    "source_name": "Moldova",
+    "source_sha256": "53bb1489acffc62ad4efab29b61b4ae438afce3154f3617b49e85d075a39cd96",
+    "kind": "history",
+    "excerpt": "replaced the communist flag in 1990; the coat of arms is based on traditional designs"
+  },
+  "Monaco": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/mn.json",
+    "source_name": "Monaco",
+    "source_sha256": "51aba35444e9498ef3ca1b2e3dbd70e714d48fa76b429545708731284f433a20",
+    "kind": "history",
+    "excerpt": "uses the colors of the ruling House of Grimaldi; colors have been in use since 1339, making it one of the world's oldest…"
+  },
+  "Mongolia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/east-n-southeast-asia/mg.json",
+    "source_name": "Mongolia",
+    "source_sha256": "d90e1af5a9617c2eda96dccd2a9edee3e8d7747c72ec0f6836ae7b6232ed1117",
+    "kind": "meaning",
+    "excerpt": "blue stands for the sky, and red for progress and prosperity"
+  },
+  "Montenegro": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/mj.json",
+    "source_name": "Montenegro",
+    "source_sha256": "7ee187647aff4161ce32200a2643b9651104faa3bcdf4616b00ee420c15f5cb7",
+    "kind": "meaning",
+    "excerpt": "the eagle symbolizes the unity of church and state; the lion is a symbol of episcopal authority, a reference to the three-and-a-half centuries…"
+  },
+  "Morocco": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/mo.json",
+    "source_name": "Morocco",
+    "source_sha256": "3b357c46b1d38302198c982f192920930a21378817c6907a6b5379086b064b40",
+    "kind": "meaning",
+    "excerpt": "red and green are traditional colors in Arab flags, although the use of red is more commonly associated with the Arab states of…"
+  },
+  "Mozambique": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/mz.json",
+    "source_name": "Mozambique",
+    "source_sha256": "7a932c9bbcfffc39921b2fd4121dd6a3dea82ae9c1e54dd42866da48f93fab50",
+    "kind": "meaning",
+    "excerpt": "green stands for the riches of the land, white for peace, black for the African continent, yellow for the country's minerals, and red…"
+  },
+  "Myanmar": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/east-n-southeast-asia/bm.json",
+    "source_name": "Burma",
+    "source_sha256": "44c333dc8b268936a5831cd3fcd65545cf8d03c2aae9401834adff6b7433ab8f",
+    "kind": "history",
+    "excerpt": "the design revives the triband colors that Burma used from 1943 to 1945, during the Japanese occupation"
+  },
+  "Namibia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/wa.json",
+    "source_name": "Namibia",
+    "source_sha256": "4ddc78c135fdaf9cfed916a2a6ee5dd52d454d08bc0766a621019c95d1e4dc6d",
+    "kind": "meaning",
+    "excerpt": "red stands for the heroism of the people and their determination to build a future of equal opportunity; white stands for peace, unity,…"
+  },
+  "Nauru": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/australia-oceania/nr.json",
+    "source_name": "Nauru",
+    "source_sha256": "11c42155cf68d977430ca824c36171f906beeba682ea5fac98b26bde1eaf87e9",
+    "kind": "meaning",
+    "excerpt": "blue stands for the Pacific Ocean; the star indicates the country's location in relation to the equator (the gold stripe), and the 12…"
+  },
+  "Nepal": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/south-asia/np.json",
+    "source_name": "Nepal",
+    "source_sha256": "39d14e306232c2799b21e01ec8596eee3c39e86c6dac39b936f4f575f383b6e8",
+    "kind": "meaning",
+    "excerpt": "red stands for the rhododendron (the national flower) and victory and bravery, and the blue border for peace and harmony; the two triangles…"
+  },
+  "Netherlands": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/nl.json",
+    "source_name": "Netherlands",
+    "source_sha256": "3eb75701a9eaa5d96b92728814cfce0c262b76624dbb8bf8101606871b76bb95",
+    "kind": "history",
+    "excerpt": "the colors come from WILLIAM I, Prince of Orange; originally the upper band was orange, but the dye would turn red over time,…"
+  },
+  "New Zealand": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/australia-oceania/nz.json",
+    "source_name": "New Zealand",
+    "source_sha256": "4cc5b12693fb06f4084bea64fe2b9ad833481efe15e987962a418eceada5ee43",
+    "kind": "meaning",
+    "excerpt": "the stars represent the Southern Cross constellation"
+  },
+  "Nicaragua": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/nu.json",
+    "source_name": "Nicaragua",
+    "source_sha256": "2cdee1a757df57114b9db9314d292352f0bf6c9b1c3b95d0639a99f66f734b0a",
+    "kind": "meaning",
+    "excerpt": "blue stands for the Pacific Ocean and the Caribbean Sea, and white for the land between the two bodies of water"
+  },
+  "Niger": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/ng.json",
+    "source_name": "Niger",
+    "source_sha256": "b475e97d6f7100bfb83bd17332df57b38c05c4d0584f56c081ba84b3a43039fc",
+    "kind": "meaning",
+    "excerpt": "orange stands for the northern Sahara regions, white for purity and innocence, and green for hope and the fertile and productive southern and…"
+  },
+  "Nigeria": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/ni.json",
+    "source_name": "Nigeria",
+    "source_sha256": "93dbb46cd66270fb0ff9f5306ad77276d86c96ab299ec47d0310e997b94220eb",
+    "kind": "meaning",
+    "excerpt": "green stands for the country's forests and natural resources, and white for peace and unity"
+  },
+  "Niue": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/australia-oceania/ne.json",
+    "source_name": "Niue",
+    "source_sha256": "67621bcda039fad5b3314d86fd5e2064752af6745a414a670ef4389a7ff82a51",
+    "kind": "meaning",
+    "excerpt": "the large star represents Niue, and the smaller stars symbolize links with New Zealand; yellow stands for sunshine, as well as the warmth…"
+  },
+  "North Korea": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/east-n-southeast-asia/kn.json",
+    "source_name": "North Korea",
+    "source_sha256": "d3f148b473cdfbe6db9fa8970346fc276689a4581118c6868a790de888a548ae",
+    "kind": "meaning",
+    "excerpt": "the red band stands for revolutionary traditions, the white for purity, strength, and dignity; blue for sovereignty, peace, and friendship; the red star…"
+  },
+  "North Macedonia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/mk.json",
+    "source_name": "North Macedonia",
+    "source_sha256": "466c085bea6eb9280a9ca7c7c25f06b7dd77a740817c12d2cd98cb65bfd128ab",
+    "kind": "meaning",
+    "excerpt": "the red and yellow colors have long been associated with Macedonia"
+  },
+  "Northern Cyprus": {
+    "status": "no_profile"
+  },
+  "Norway": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/no.json",
+    "source_name": "Norway",
+    "source_sha256": "3d1ed09756f91b92de4f0e1b1dff2c7d3ac2e880051f1f43d6935d2244aac99d",
+    "kind": "meaning",
+    "excerpt": "the colors represent Norway's past political unions with Denmark (red and white) and Sweden (blue)"
+  },
+  "Oman": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/middle-east/mu.json",
+    "source_name": "Oman",
+    "source_sha256": "d499b77e0e8b20d09ee91917c88b333ad24267c3adfaeae289f014810118a2b1",
+    "kind": "meaning",
+    "excerpt": "white stands for peace and prosperity, red for battles against foreign invaders, and green for the Jebel al Akhdar (Green Mountains) and fertility"
+  },
+  "Pakistan": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/south-asia/pk.json",
+    "source_name": "Pakistan",
+    "source_sha256": "9ea802080d0168fab004d0fb5f95e092a8e2313c62c9887c17f8c38958a5d341",
+    "kind": "meaning",
+    "excerpt": "the crescent, star, and color green are all traditional Islamic symbols; the white band symbolizes the role of religious minorities"
+  },
+  "Palau": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/australia-oceania/ps.json",
+    "source_name": "Palau",
+    "source_sha256": "f5306d97d387fdebcb35a56b879732555a3d49312864b02debc428b9bb5304c9",
+    "kind": "meaning",
+    "excerpt": "blue stands for the ocean, and the disk for the moon, which is considered a symbol of peace, love, and tranquility"
+  },
+  "Palestine": {
+    "status": "no_profile"
+  },
+  "Panama": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/pm.json",
+    "source_name": "Panama",
+    "source_sha256": "c48e43a4c793bbd6ce70f9da4c3b6d351f3deb1338f4b77252b56684f532415e",
+    "kind": "meaning",
+    "excerpt": "blue and red stand for the main political parties, and white for peace between them; the blue star stands for the civic virtues…"
+  },
+  "Papua New Guinea": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/east-n-southeast-asia/pp.json",
+    "source_name": "Papua New Guinea",
+    "source_sha256": "a41cbc171f55dde21a2b514fdebc70ae6a0ac2e9ee70c6ee55386f414d41124a",
+    "kind": "meaning",
+    "excerpt": "red, black, and yellow are the country's traditional colors; the bird of paradise is an emblem of regional tribal culture and represents the…"
+  },
+  "Paraguay": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/south-america/pa.json",
+    "source_name": "Paraguay",
+    "source_sha256": "13b1cedbd334519e76b097e0aa472049b72fc632d22bfe01539a2c0fa7f08e3f",
+    "kind": "meaning",
+    "excerpt": "red stands for bravery and patriotism, white for integrity and peace, and blue for liberty and generosity"
+  },
+  "Peru": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/south-america/pe.json",
+    "source_name": "Peru",
+    "source_sha256": "ff9c33e0fd3484f21446a8d4fca25583b1d96cbf6d07e810f90ec76d89e4881b",
+    "kind": "meaning",
+    "excerpt": "the vicuna represents fauna, the cinchona tree is the source of quinine, and the cornucopia symbolizes mineral wealth; red stands for blood shed…"
+  },
+  "Philippines": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/east-n-southeast-asia/rp.json",
+    "source_name": "Philippines",
+    "source_sha256": "ac334b118656ec75661e8a2522420242bcedeee26b2c44fb3e243c6a71d65126",
+    "kind": "meaning",
+    "excerpt": "blue stands for peace and justice, red for courage, and the triangle for equality; the rays represent the first eight provinces that sought…"
+  },
+  "Poland": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/pl.json",
+    "source_name": "Poland",
+    "source_sha256": "7f71b37317be44f2c048cd5e7ade4001afb4e70b135ef5d73f5d7c9bb92409f8",
+    "kind": "meaning",
+    "excerpt": "colors derive from the Polish emblem, a white eagle on a red field"
+  },
+  "Portugal": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/po.json",
+    "source_name": "Portugal",
+    "source_sha256": "fe0d563dc32d6f1d60c75250a5a824abf19d6161a196cb8a5b2abeed658d2213",
+    "kind": "meaning",
+    "excerpt": "explanations for the color meanings are ambiguous, but a popular interpretation says that green symbolizes hope and red the blood of those defending…"
+  },
+  "Qatar": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/middle-east/qa.json",
+    "source_name": "Qatar",
+    "source_sha256": "3adf12893118e21cd39fe416ece3e355ebd18414a112b3ca1da3975fdd7ffd08",
+    "kind": "meaning",
+    "excerpt": "maroon stands for the blood shed in Qatari wars, and white for peace; the nine-pointed serrated edge is a reference to Qatar's status…"
+  },
+  "Republic of the Congo": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/cf.json",
+    "source_name": "Congo (Brazzaville)",
+    "source_sha256": "5798bfa307bc658adf028d90a4d103df50433ea2240cf23f1e73d35e34b5c96e",
+    "kind": "meaning",
+    "excerpt": "green stands for agriculture and forests, and yellow for the people's friendship and nobility; the meaning of the red color is not noted…"
+  },
+  "Romania": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/ro.json",
+    "source_name": "Romania",
+    "source_sha256": "b5c47a2fc0bc671ea3e2a9b8b604eecfc6e82862587ee0456792530c583a1e1d",
+    "kind": "meaning",
+    "excerpt": "the colors come from the principalities of Walachia (red and yellow) and Moldavia (red and blue), which united in 1862 to form Romania"
+  },
+  "Russia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-asia/rs.json",
+    "source_name": "Russia",
+    "source_sha256": "e106a10f80b3081d81859d0ab1ab235bec76c9e79ba5decc0624efa727f6f584",
+    "kind": "meaning",
+    "excerpt": "colors may have been based on the Dutch flag, but no official meaning is assigned"
+  },
+  "Rwanda": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/rw.json",
+    "source_name": "Rwanda",
+    "source_sha256": "bd576f1919bae666a47c058b5af9a51632cb2d929cce30b460f35feb97c6d33b",
+    "kind": "meaning",
+    "excerpt": "blue stands for happiness and peace, yellow for economic development and mineral wealth, and green for hope for prosperity and natural resources; the…"
+  },
+  "Saint Kitts and Nevis": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/sc.json",
+    "source_name": "Saint Kitts and Nevis",
+    "source_sha256": "a688c52c171f81573a42bf762787260fcffb635c7b6ea7fa01c42bb3170d2dce",
+    "kind": "meaning",
+    "excerpt": "green stands for the island's fertility, red for the struggles of the people from slavery, yellow for year-round sunshine, and black for the…"
+  },
+  "Saint Lucia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/st.json",
+    "source_name": "Saint Lucia",
+    "source_sha256": "3825ca27c8b84bcef3eca9959959ccbf21eb14bf4c611a7e3f7bf9cd5ffa7aa5",
+    "kind": "meaning",
+    "excerpt": "blue stands for the sky and sea, gold for sunshine and prosperity, and white and black for the ethnic composition of the island;…"
+  },
+  "Saint Vincent and the Grenadines": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/vc.json",
+    "source_name": "Saint Vincent and the Grenadines",
+    "source_sha256": "e97e7e6d22a17e2f4aa97e766930882708c2885a1b6f4942578b6d090afa6216",
+    "kind": "meaning",
+    "excerpt": "the diamonds represent the islands as \"the Gems of the Antilles\" and are set slightly lowered in the gold band to reflect the…"
+  },
+  "Samoa": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/australia-oceania/ws.json",
+    "source_name": "Samoa",
+    "source_sha256": "327cfa68eaacde71fd3ccd177d51d6982a6cebef9d73068a51cc78ae77680ea3",
+    "kind": "meaning",
+    "excerpt": "red stands for courage, blue for freedom, and white for purity"
+  },
+  "San Marino": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/sm.json",
+    "source_name": "San Marino",
+    "source_sha256": "75322adec75699e2e6953300c43587f8e9372231d168d1893e5b20c1668405f5",
+    "kind": "meaning",
+    "excerpt": "the towers represent the Guaita, Cesta, and Montale castles on Mount Titano; white and blue are said to stand for peace and liberty"
+  },
+  "São Tomé and Príncipe": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/tp.json",
+    "source_name": "Sao Tome and Principe",
+    "source_sha256": "ca5c54a7a88b44c07470a22e527ff9bf657c2be7e1206f745a9e8e8b4f9c9174",
+    "kind": "meaning",
+    "excerpt": "green stands for the country's rich vegetation, red for the struggle for independence, and yellow for cocoa, one of the country's main agricultural…"
+  },
+  "Saudi Arabia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/middle-east/sa.json",
+    "source_name": "Saudi Arabia",
+    "source_sha256": "27f05fe5ad2f5ea39c9b6121537270e558285d2078758a7f0405fdd789a3d776",
+    "kind": "history",
+    "excerpt": "design dates to the early 20th century and is closely associated with the Al Saud family that established the kingdom in 1932; the…"
+  },
+  "Senegal": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/sg.json",
+    "source_name": "Senegal",
+    "source_sha256": "7110a6f8cc217ba37bd52f73df8019619dce037097fe01d1787c6cdc4c597eee",
+    "kind": "history",
+    "excerpt": "uses the colors of the Pan-African movement"
+  },
+  "Serbia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/ri.json",
+    "source_name": "Serbia",
+    "source_sha256": "a4fc536dea866a31a6a0ee08a749ffd801bced0bc6ccbb432c870108761fcd58",
+    "kind": "meaning",
+    "excerpt": "red, blue, and white are the pan-Slav colors that represent freedom and revolutionary ideals; the eagle on a red shield represents the government;…"
+  },
+  "Seychelles": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/se.json",
+    "source_name": "Seychelles",
+    "source_sha256": "926ad85433283720ee4630d1c299ef1614b64aecf413a22eed0147e7fbc3e459",
+    "kind": "meaning",
+    "excerpt": "the bands symbolize a dynamic new country moving into the future; blue stands for the sky and sea, yellow for the sun giving…"
+  },
+  "Sierra Leone": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/sl.json",
+    "source_name": "Sierra Leone",
+    "source_sha256": "5ba79d17b15740992610381dd9cab74ad5c20f61d94f3b5490a6640d35051959",
+    "kind": "meaning",
+    "excerpt": "green stands for agriculture, mountains, and natural resources; white for unity and justice; and blue for the sea and the natural harbor in…"
+  },
+  "Singapore": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/east-n-southeast-asia/sn.json",
+    "source_name": "Singapore",
+    "source_sha256": "1658785b00fa6f9752644380fef2d90b6dfe29430bf6c92dce6894120154e457",
+    "kind": "meaning",
+    "excerpt": "red stands for brotherhood and equality, and white for purity and virtue; the waxing crescent moon symbolizes a young nation on the ascendancy;…"
+  },
+  "Slovakia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/lo.json",
+    "source_name": "Slovakia",
+    "source_sha256": "41da2ca906d98d2850c74a749b52742d5b832582de80cde29d6557ac80b74d70",
+    "kind": "meaning",
+    "excerpt": "white, blue, and red are the pan-Slav colors"
+  },
+  "Slovenia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/si.json",
+    "source_name": "Slovenia",
+    "source_sha256": "98fa9a0948bef76179896fa5bafd4d5f787496051a95648bf595a3e1f9ea58b0",
+    "kind": "meaning",
+    "excerpt": "the wavy lines represent seas and rivers; the colors come from the medieval coat of arms of the Duchy of Carniola; the stars…"
+  },
+  "Solomon Islands": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/australia-oceania/bp.json",
+    "source_name": "Solomon Islands",
+    "source_sha256": "0fc601441d40c79982027a660ee83069274336406321bd98d8f896e7c63cc28e",
+    "kind": "meaning",
+    "excerpt": "blue stands for the ocean, green for the land, and yellow for sunshine; the five stars stand for the main island groups"
+  },
+  "Somalia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/so.json",
+    "source_name": "Somalia",
+    "source_sha256": "fb210bda375e899a61f8dfe91861a1c4aa3243723775c7780e4bfc2005bbad47",
+    "kind": "meaning",
+    "excerpt": "the blue field was originally influenced by the UN flag but today is said to represent the sky and the Indian Ocean; the…"
+  },
+  "Somaliland": {
+    "status": "no_profile"
+  },
+  "South Africa": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/sf.json",
+    "source_name": "South Africa",
+    "source_sha256": "955a5945f35eda49a55295b10f0367651da2b8e2529e47a0bc4f6347ec4d63b8",
+    "kind": "meaning",
+    "excerpt": "the colors have no official meaning, but the Y stands for \"the convergence of diverse elements within South African society, taking the road…"
+  },
+  "South Korea": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/east-n-southeast-asia/ks.json",
+    "source_name": "South Korea",
+    "source_sha256": "cbf1769b9ad33e2c016f94b9dd2b988f6acd03f3c7dc01fa755bb4c588772aee",
+    "kind": "meaning",
+    "excerpt": "the flag is called Taegukki; white is a traditional Korean color and represents peace and purity; blue stands for the negative cosmic forces…"
+  },
+  "South Ossetia": {
+    "status": "no_profile"
+  },
+  "South Sudan": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/od.json",
+    "source_name": "South Sudan",
+    "source_sha256": "f3125799f53fa2e2f97283e4d2da38aa1798d5eb6b246e53133553edbce41118",
+    "kind": "meaning",
+    "excerpt": "black stands for the people, red for the blood shed in the struggle for freedom, green for the land, and blue for the…"
+  },
+  "Spain": {
+    "status": "profile_only",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/sp.json",
+    "source_name": "Spain",
+    "source_sha256": "72f3ae65f8eff3fc2a09a868961ec886f6afb159d5b2495999ac20a5e9d13d19"
+  },
+  "Sri Lanka": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/south-asia/ce.json",
+    "source_name": "Sri Lanka",
+    "source_sha256": "30230daa35db145d35ec52530c7825decc0648145d769698ec00dc13ff63daaa",
+    "kind": "meaning",
+    "excerpt": "the sword stands for national sovereignty; the lion for Sinhalese ethnicity, the strength of the nation, and bravery; the four bo leaves for…"
+  },
+  "Sudan": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/su.json",
+    "source_name": "Sudan",
+    "source_sha256": "0fcdfcec573c22b8c85fa4c249c95eec5e6a297da55cb545910a1d31731255b3",
+    "kind": "meaning",
+    "excerpt": "red stands for the struggle for freedom; white for peace, light, and love, black for the people; green for Islam, agriculture, and prosperity"
+  },
+  "Suriname": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/south-america/ns.json",
+    "source_name": "Suriname",
+    "source_sha256": "bad620a5f2ff98d29f562e6b180ff017c5235039e8f4d7aa3358db173deb83b2",
+    "kind": "meaning",
+    "excerpt": "red stands for progress and love, green for hope and fertility, and white for peace, justice, and freedom; the star represents the unity…"
+  },
+  "Sweden": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/sw.json",
+    "source_name": "Sweden",
+    "source_sha256": "319e150a119875dcbff2563b87e4704e979b7f72f7ad2c77ce43bc7f578808b3",
+    "kind": "meaning",
+    "excerpt": "the colors come from the Swedish coat of arms"
+  },
+  "Switzerland": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/sz.json",
+    "source_name": "Switzerland",
+    "source_sha256": "5f46418408b95836589055681d632ea98800648f0062fb6a07253763e6a7fc41",
+    "kind": "history",
+    "excerpt": "the origin of the flag is unclear, but a white cross was used to identify Swiss Confederation troops at the Battle of Laupen…"
+  },
+  "Syria": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/middle-east/sy.json",
+    "source_name": "Syria",
+    "source_sha256": "8cc56c158f1179ea7dd98899523bbd47bebd181ea2f57bbb28bb24b112439def",
+    "kind": "meaning",
+    "excerpt": "the design is the same as a previous Syrian national flag (in use 1932-58 and 1961-63), but it is still unclear if the…"
+  },
+  "Taiwan": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/east-n-southeast-asia/tw.json",
+    "source_name": "Taiwan",
+    "source_sha256": "975a910c05e95151da8a9a9ff074eafc02a6ae4b2856aa4c53b329846fad4707",
+    "kind": "meaning",
+    "excerpt": "blue stands for liberty, justice, and democracy; red for fraternity, sacrifice, and nationalism; white for equality, frankness, and the people's livelihood; the 12…"
+  },
+  "Tajikistan": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-asia/ti.json",
+    "source_name": "Tajikistan",
+    "source_sha256": "910291e5d02a28db207c10688ce7b38e02ccd739cb277e911b2464e2ad4f2e12",
+    "kind": "meaning",
+    "excerpt": "red stands for the sun, victory, and the unity of the nation; white for purity, cotton, and mountain snows; green for Islam and…"
+  },
+  "Tanzania": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/tz.json",
+    "source_name": "Tanzania",
+    "source_sha256": "4039d0e23675abffe59ccf0e839cc3a0cdc2aa1c27f2478ba39953b6dc76db03",
+    "kind": "meaning",
+    "excerpt": "colors come from the flags of Tanganyika and Zanzibar; green stands for natural vegetation, gold for rich mineral deposits, black for the Swahili…"
+  },
+  "Thailand": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/east-n-southeast-asia/th.json",
+    "source_name": "Thailand",
+    "source_sha256": "b73fb851d260ea86788bd950286160c4ff83e63146cc94777303fe3ef9a29037",
+    "kind": "meaning",
+    "excerpt": "red stands for the nation and the blood of life, white for religion and the purity of Buddhism, and blue for the monarchy"
+  },
+  "Timor-Leste": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/east-n-southeast-asia/tt.json",
+    "source_name": "Timor-Leste",
+    "source_sha256": "806ede563e22b2e05f5a4717e8f8619dbf7e198cda3c1001a35e3c14ccffa107",
+    "kind": "meaning",
+    "excerpt": "yellow stands for past colonialism, black for obscurantism that needs to be overcome, and red for the struggle for freedom; the white star…"
+  },
+  "Togo": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/to.json",
+    "source_name": "Togo",
+    "source_sha256": "929c80a3931548f3e57a64cea43fe766e53f494e4a6d9b058236805ab1294e39",
+    "kind": "meaning",
+    "excerpt": "the five horizontal stripes stand for the country's regions; red stands for the people's loyalty and patriotism; green for hope, fertility, and agriculture;…"
+  },
+  "Tonga": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/australia-oceania/tn.json",
+    "source_name": "Tonga",
+    "source_sha256": "d433aa676bb07cdf36f7747ba34766ee34a3e3225ea177127002b10ac6469e20",
+    "kind": "meaning",
+    "excerpt": "the cross stands for Christianity in Tonga, red for Christ's blood and sacrifice, and white for purity"
+  },
+  "Transnistria": {
+    "status": "no_profile"
+  },
+  "Trinidad and Tobago": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-america-n-caribbean/td.json",
+    "source_name": "Trinidad and Tobago",
+    "source_sha256": "d69fb8f952f4164fb9586b0d29f77d3f53d7c0f941840ed2d60b7173524bf211",
+    "kind": "meaning",
+    "excerpt": "the colors represent the elements of earth, water, and fire; black also stands for the wealth of the land and the dedication of…"
+  },
+  "Tunisia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/ts.json",
+    "source_name": "Tunisia",
+    "source_sha256": "bcf1d02d34fdbaecef3a273647d27628503c4943efe1e481355d9c1e634f56c4",
+    "kind": "meaning",
+    "excerpt": "red stands for martyrs' blood shed the fight against oppression, and white for peace; the crescent and star are traditional symbols of Islam"
+  },
+  "Turkey": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/middle-east/tu.json",
+    "source_name": "Turkey",
+    "source_sha256": "dd91a5bb0629c5a7a0a32dd64e240d2e21f8e322173d6a7ea436335cb8e1233f",
+    "kind": "meaning",
+    "excerpt": "the flag colors and designs closely resemble the Ottoman Empire's flag; the crescent moon and star serve as insignia for Turkic peoples; according…"
+  },
+  "Turkmenistan": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-asia/tx.json",
+    "source_name": "Turkmenistan",
+    "source_sha256": "85997a7bc7d113db2725c607aec52a14fafd2970f37ae7610f47e31eed6f614c",
+    "kind": "meaning",
+    "excerpt": "the green color and crescent moon stand for Islam, the five stars for the country's regions, and the guls for national identity"
+  },
+  "Tuvalu": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/australia-oceania/tv.json",
+    "source_name": "Tuvalu",
+    "source_sha256": "66605e38faee7aeb5a83f21688eb855752278cc19be3b885a09453fc3bcfbc38",
+    "kind": "meaning",
+    "excerpt": "the stars represent a map of the country, with each symbolizing an atoll in the ocean"
+  },
+  "Uganda": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/ug.json",
+    "source_name": "Uganda",
+    "source_sha256": "34bf292a3b50cd476b2206014b2edf7a1a8601df790860e40b946561eb17e8df",
+    "kind": "meaning",
+    "excerpt": "black stands for the African people, yellow for sunshine and vitality, and red for African brotherhood"
+  },
+  "Ukraine": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/up.json",
+    "source_name": "Ukraine",
+    "source_sha256": "04cec3f28e5f0c9d75ac4494f6641e70ce40648bdfdbd4be7e4ac9113622f9a3",
+    "kind": "meaning",
+    "excerpt": "the colors date back to medieval heraldry, but they are sometimes said to represent grain fields under a blue sky"
+  },
+  "United Arab Emirates": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/middle-east/ae.json",
+    "source_name": "none",
+    "source_sha256": "3dc6a46b663cfe7ecf00f91796d2b5d6117f93662e7c59c47506a2a4a3eb4e0c",
+    "kind": "meaning",
+    "excerpt": "the flag incorporates all four pan-Arab colors, which in this case represent fertility (green), neutrality (white), oil (black), and unity (red); red is…"
+  },
+  "United Kingdom": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/uk.json",
+    "source_name": "United Kingdom",
+    "source_sha256": "9a39bcd1bf70f3a5f9f82db14397b33d396042b8e958d40c422a5db185ffc3c1",
+    "kind": "history",
+    "excerpt": "the official name is the Union Flag, but commonly called the Union Jack; the design and colors have been the basis for a…"
+  },
+  "United States": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/north-america/us.json",
+    "source_name": "United States",
+    "source_sha256": "5cea8e0d12f88d14c9d8e4f8c6a7039216cb3d146eb2824fda935788b1fa76f4",
+    "kind": "meaning",
+    "excerpt": "the stars represent the 50 states, and the stripes represent the 13 original colonies; blue stands for loyalty, devotion, truth, justice, and friendship;…"
+  },
+  "Uruguay": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/south-america/uy.json",
+    "source_name": "Uruguay",
+    "source_sha256": "6e2c0b27193bfb8b8c10399ce6b58ca0548f366e5a773d104932c61bf2cf7e68",
+    "kind": "meaning",
+    "excerpt": "the stripes represent the country's nine original departments; the sun refers to the legend of the sun breaking through the clouds on 25…"
+  },
+  "Uzbekistan": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/central-asia/uz.json",
+    "source_name": "Uzbekistan",
+    "source_sha256": "3e5d37725be16087b4d4f971490779b9041e16acef20e1a2d80f3ef9b38bc87a",
+    "kind": "meaning",
+    "excerpt": "blue stands for the Turkic peoples and the sky, white for peace and the striving for purity in thoughts and deeds, and green…"
+  },
+  "Vanuatu": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/australia-oceania/nh.json",
+    "source_name": "Vanuatu",
+    "source_sha256": "f41331817086b4409c06b0ef50edbbfd07df6ea2478d99171196ea1bacf1ce97",
+    "kind": "meaning",
+    "excerpt": "red stands for unity and the blood of men and boars, green for the richness of the islands, and black for the ni-Vanuatu…"
+  },
+  "Vatican City (Holy See)": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/europe/vt.json",
+    "source_name": "Holy See (Vatican City)",
+    "source_sha256": "aa4816a1cba08bd65da695f4b0ba8d68f50f08026a1572cc96232f40f9e10ef4",
+    "kind": "meaning",
+    "excerpt": "yellow stands for the pope's spiritual power, and white for his worldly power"
+  },
+  "Venezuela": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/south-america/ve.json",
+    "source_name": "Venezuela",
+    "source_sha256": "47f61b68b1f8f81c674bd0689826404c3b55a1d66662081b483feed1f1726e80",
+    "kind": "meaning",
+    "excerpt": "yellow stands for the riches of the land, blue for the courage of its people, and red for the blood shed in attaining…"
+  },
+  "Vietnam": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/east-n-southeast-asia/vm.json",
+    "source_name": "Vietnam",
+    "source_sha256": "a9aa7e01600056b9ffca487a9080b5c0b90fbff1358093bc9871950c0ce3dbb2",
+    "kind": "meaning",
+    "excerpt": "red stands for revolution and blood, and the five-pointed star for the five elements of the populace -- peasants, workers, intellectuals, traders, and…"
+  },
+  "Western Sahara (Sahrawi Arab Democratic Republic)": {
+    "status": "no_profile"
+  },
+  "Yemen": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/middle-east/ym.json",
+    "source_name": "Yemen",
+    "source_sha256": "94819d9362f23f12808160620f7348efa5976100dfcce46faa312c049a29c7dc",
+    "kind": "meaning",
+    "excerpt": "the band colors come from the Arab Liberation flag and represent oppression (black) overcome through bloody struggle (red), to be replaced by a…"
+  },
+  "Zambia": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/za.json",
+    "source_name": "Zambia",
+    "source_sha256": "05fe2863fd2a6589cf0a9b6bcd241b1c7144d7946b1662bce2c121fd70598fe5",
+    "kind": "meaning",
+    "excerpt": "green stands for the country's natural resources and vegetation, red for the struggle for freedom, black for the people, and orange for the…"
+  },
+  "Zimbabwe": {
+    "status": "excerpt",
+    "url": "https://github.com/factbook/factbook.json/blob/144d6977b2b01ac1cbd220de754c0a005616760b/africa/zi.json",
+    "source_name": "Zimbabwe",
+    "source_sha256": "0d8416b8f2ae4ab8e23ca2f262d909bbbf0a71bc51e71375d7d2bc35fe8a8d5e",
+    "kind": "meaning",
+    "excerpt": "the bird represents the long history of the country; white stands for peace, green for agriculture, yellow for mineral wealth, red for the…"
+  }
+}
