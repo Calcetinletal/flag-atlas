@@ -23,23 +23,37 @@ function bitCount(value){let count=0;while(value){value&=value-1;count++;}return
 function expectedScore(a,b){const union=mask(a)|mask(b);return union?bitCount(mask(a)&mask(b))/bitCount(union):0;}
 function expectedMatches(focus){return rows.filter(row=>row.country!==focus.country&&mask(row)).map(row=>({row,score:expectedScore(focus,row)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.row.country.localeCompare(b.row.country)).slice(0,8);}
 function checkGraph(focus){
-  const matches=expectedMatches(focus),eligible=matches.map(m=>m.row.country);
-  const nodes=[...doc.querySelectorAll('#network-graph .neighbor-node')];
-  assert.deepEqual(nodes.map(n=>n.dataset.network),eligible,`${focus.country}: network nodes`);
-  const core=[...doc.querySelectorAll('#network-graph [data-edge="center"]')];
-  assert.deepEqual(core.map(line=>line.dataset.b),eligible,`${focus.country}: central links`);
-  const expected=[];
-  for(let i=0;i<matches.length;i++)for(let j=i+1;j<matches.length;j++)if(expectedScore(matches[i].row,matches[j].row)>=2/3)expected.push(matches[i].row.country+'|'+matches[j].row.country);
-  const neighbor=[...doc.querySelectorAll('#network-graph [data-edge="neighbor"]')].map(line=>line.dataset.a+'|'+line.dataset.b);
-  assert.deepEqual(neighbor,expected,`${focus.country}: neighbor links`);
-  assert.deepEqual([...doc.querySelectorAll('#twins-list .twin-card')].map(card=>card.dataset.network),eligible);
+  const nodes=[...doc.querySelectorAll('#network-graph .network-node')];
+  assert.equal(nodes.length,rows.length);
+  assert.deepEqual(nodes.filter(node=>node.classList.contains('selected')).map(node=>node.dataset.network),[focus.country]);
+  assert.deepEqual([...doc.querySelectorAll('#network-graph .network-edge.selected')].map(line=>line.dataset.a+'|'+line.dataset.b),[...doc.querySelectorAll('#network-graph .network-edge')].filter(line=>line.dataset.a===focus.country||line.dataset.b===focus.country).map(line=>line.dataset.a+'|'+line.dataset.b));
+  assert.deepEqual([...doc.querySelectorAll('#twins-list .twin-card')].map(card=>card.dataset.network),expectedMatches(focus).map(m=>m.row.country));
 }
 (async()=>{
-  window.eval(fs.readFileSync(path.join(root,'app.js'),'utf8')+'\nwindow.__testPaletteSimilarity=paletteSimilarity;window.__testColorStatistics=colorStatistics;window.__testClosestPalettes=closestPalettes;');
+  window.eval(fs.readFileSync(path.join(root,'app.js'),'utf8')+'\nwindow.__testPaletteSimilarity=paletteSimilarity;window.__testColorStatistics=colorStatistics;window.__testClosestPalettes=closestPalettes;window.__testBuildNetwork=buildNetwork;');
   await new Promise(resolve=>window.setTimeout(resolve,40));
   assert.deepEqual(errors,[]);
   const eligible=rows.filter(r=>mask(r));
-  assert.equal(doc.querySelectorAll('#network-select option').length,eligible.length);
+  assert.equal(doc.querySelectorAll('#network-select option').length,rows.length);
+  const graphNodes=[...doc.querySelectorAll('#network-graph .network-node')];
+  assert.deepEqual(graphNodes.map(node=>node.dataset.network).sort(),rows.map(row=>row.country).sort());
+  const positions=graphNodes.map(node=>[parseFloat(node.style.left),parseFloat(node.style.top)]);
+  for(let i=0;i<positions.length;i++)for(let j=i+1;j<positions.length;j++)assert.ok(Math.abs(positions[i][0]-positions[j][0])>=96||Math.abs(positions[i][1]-positions[j][1])>=68,'network flag nodes must not overlap');
+  // Kruskal's algorithm is independent of the app's Prim implementation.
+  const possible=[];
+  for(let i=0;i<rows.length;i++)for(let j=i+1;j<rows.length;j++){const score=expectedScore(rows[i],rows[j]);if(score>0)possible.push({i,j,score});}
+  possible.sort((a,b)=>b.score-a.score);
+  const parent=rows.map((_,i)=>i),rootOf=i=>{while(parent[i]!==i)i=parent[i];return i;};
+  let expectedTotal=0,expectedEdges=0;
+  for(const edge of possible){const a=rootOf(edge.i),b=rootOf(edge.j);if(a!==b){parent[a]=b;expectedTotal+=edge.score;expectedEdges++;}}
+  const byName=new Map(rows.map(row=>[row.country,row])),actualEdges=[...doc.querySelectorAll('#network-graph .network-edge')];
+  assert.equal(actualEdges.length,expectedEdges);
+  let actualTotal=0;const pairs=new Set(),actualParent=new Map(rows.map(row=>[row.country,row.country]));
+  function actualRoot(name){while(actualParent.get(name)!==name)name=actualParent.get(name);return name;}
+  for(const line of actualEdges){const a=byName.get(line.dataset.a),b=byName.get(line.dataset.b),score=expectedScore(a,b);assert.ok(score>0);assert.equal(Number(line.dataset.score),score);const key=[a.country,b.country].sort().join('|');assert.ok(!pairs.has(key));pairs.add(key);const rootA=actualRoot(a.country),rootB=actualRoot(b.country);assert.notEqual(rootA,rootB,'network must not contain a cycle');actualParent.set(rootA,rootB);actualTotal+=score;}
+  assert.ok(Math.abs(actualTotal-expectedTotal)<1e-8,'network must have maximum possible total similarity');
+  const synthetic=window.__testBuildNetwork([{country:'A',colors:['red']},{country:'B',colors:['red']},{country:'C',colors:['blue']},{country:'D',colors:null}]);
+  assert.equal(synthetic.rows.length,4);assert.equal(synthetic.edges.length,1);
   assert.match($('palette-denominator').textContent,new RegExp(`${eligible.length}`));
   const statistics=window.__testColorStatistics(rows);
   for(const color of colorNames){
@@ -69,7 +83,7 @@ function checkGraph(focus){
   assert.equal(window.__testPaletteSimilarity({colors:['red','red']},{colors:['red']}).score,1);
   for(const focus of eligible){$('network-select').value=focus.country;$('network-select').dispatchEvent(new window.Event('change',{bubbles:true}));checkGraph(focus);}
   const initial=eligible.find(row=>expectedMatches(row).length>0);$('network-select').value=initial.country;$('network-select').dispatchEvent(new window.Event('change',{bubbles:true}));
-  const neighbor=doc.querySelector('#network-graph [data-network]'),neighborName=neighbor.dataset.network;neighbor.click();
+  const neighbor=[...doc.querySelectorAll('#network-graph [data-network]')].find(node=>node.dataset.network!==initial.country),neighborName=neighbor.dataset.network;neighbor.click();
   assert.equal($('network-select').value,neighborName);checkGraph(rows.find(r=>r.country===neighborName));
   $('network-details').click();assert.ok($('details').open);assert.match($('detail-content').textContent,new RegExp(neighborName.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')));$('close-dialog').click();
   const twin=doc.querySelector('#twins-list [data-network]'),twinName=twin.dataset.network;twin.click();
@@ -79,6 +93,6 @@ function checkGraph(focus){
   for(const color of colorNames) assert.equal(doc.querySelector(`[data-color="${color}"]`).getAttribute('aria-pressed'),String(colors.includes(color)));
   assert.match(doc.querySelector('.network-disclaimer').textContent,/not evidence of shared origin/);
   assert.deepEqual(errors,[]);
-  console.log(`PASS: ${eligible.length} flags, ${eligible.length*eligible.length} pair scores, all ranked neighborhoods and graph links, all color counts and combinations, and palette/network interactions.`);
+  console.log(`PASS: ${rows.length} network nodes, ${actualEdges.length} maximum-similarity links, ${eligible.length*eligible.length} pair scores, ranked twins, color counts and interactions.`);
   window.close();
 })().catch(e=>{console.error(e);process.exitCode=1;window.close();});

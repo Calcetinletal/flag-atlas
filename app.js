@@ -71,7 +71,7 @@ function reset(){
 }
 
 // Color sets are derived from the displayed illustrations, not official color lists.
-const NETWORK_LIMIT=8, NEIGHBOR_LINK_MIN=2/3;
+const NETWORK_LIMIT=8;
 function detectedColors(row){
   if(!Array.isArray(row.colors) || !row.colors.length || row.colors.some(c=>!Object.hasOwn(palette,c))) return [];
   return [...new Set(row.colors)].sort((a,b)=>Object.keys(palette).indexOf(a)-Object.keys(palette).indexOf(b));
@@ -107,29 +107,52 @@ function renderPaletteStats(){
   }).join('');
   $('palette-combos').innerHTML=combos.slice(0,6).map(item=>`<button type="button" class="combo-card" data-colors="${escapeHTML(item.colors.join(','))}" aria-label="Show ${item.count} flags whose detected colors are ${escapeHTML(item.colors.join(', '))}"><span class="combo-swatches">${item.colors.map(c=>`<i style="--swatch:${palette[c]}"></i>`).join('')}</span><span class="combo-names">${escapeHTML(item.colors.join(' · '))}</span><strong>${item.count}<small> flags</small></strong></button>`).join('') || '<p>No color data is available.</p>';
 }
+// A maximum-similarity spanning forest keeps the full graph legible. A flag
+// without any shared detected colors remains visible, but has no invented edge.
+function buildNetwork(rows){
+  const ordered=rows.slice().sort((a,b)=>a.country.localeCompare(b.country));
+  const n=ordered.length, scores=ordered.map((row,i)=>ordered.map((other,j)=>i===j?0:paletteSimilarity(row,other).score));
+  const used=new Set(), best=Array(n).fill(0), parent=Array(n).fill(-1), edges=[];
+  while(used.size<n){
+    let next=-1;
+    for(let i=0;i<n;i++) if(!used.has(i) && (next<0 || best[i]>best[next])) next=i;
+    used.add(next);
+    if(parent[next]>=0 && best[next]>0) edges.push({a:parent[next],b:next,score:best[next]});
+    for(let i=0;i<n;i++) if(!used.has(i) && scores[next][i]>best[i]){best[i]=scores[next][i];parent[i]=next;}
+  }
+  const adjacency=ordered.map(()=>[]);
+  edges.forEach(({a,b})=>{adjacency[a].push(b);adjacency[b].push(a);});
+  const visitOrder=[],seen=new Set();
+  function visit(index){seen.add(index);visitOrder.push(index);adjacency[index].forEach(neighbor=>{if(!seen.has(neighbor)) visit(neighbor);});}
+  ordered.forEach((_,i)=>{if(!seen.has(i)) visit(i);});
+  const cols=14, spacingX=116, spacingY=86, positions=Array(n);
+  visitOrder.forEach((index,i)=>{const row=Math.floor(i/cols), col=i%cols;positions[index]={x:58+(row%2?cols-1-col:col)*spacingX,y:44+row*spacingY};});
+  return {rows:ordered,edges,positions,width:cols*spacingX,height:Math.max(90,Math.ceil(n/cols)*spacingY)};
+}
 function initNetwork(){
-  const eligible=state.rows.filter(row=>detectedColors(row).length).slice().sort((a,b)=>a.country.localeCompare(b.country));
-  $('network-select').innerHTML=eligible.map(row=>`<option value="${escapeHTML(row.country)}">${escapeHTML(row.country)}</option>`).join('');
-  if(!eligible.length){$('network-graph').textContent='No classified flags are available.';return;}
-  $('network-select').value=eligible[0].country;
+  const graph=buildNetwork(state.rows);state.network=graph;
+  $('network-select').innerHTML=graph.rows.map(row=>`<option value="${escapeHTML(row.country)}">${escapeHTML(row.country)}</option>`).join('');
+  if(!graph.rows.length){$('network-graph').textContent='No flags are available.';return;}
+  $('network-graph').style.width=graph.width+'px';$('network-graph').style.height=graph.height+'px';
+  $('network-graph').innerHTML=`<svg class="network-lines" viewBox="0 0 ${graph.width} ${graph.height}" aria-hidden="true">${graph.edges.map(({a,b,score})=>`<line class="network-edge" data-a="${escapeHTML(graph.rows[a].country)}" data-b="${escapeHTML(graph.rows[b].country)}" data-score="${score}" x1="${graph.positions[a].x}" y1="${graph.positions[a].y}" x2="${graph.positions[b].x}" y2="${graph.positions[b].y}"/>`).join('')}</svg>${graph.rows.map((row,i)=>`<button type="button" class="network-node" data-network="${escapeHTML(row.country)}" style="left:${graph.positions[i].x}px;top:${graph.positions[i].y}px" aria-label="Explore ${escapeHTML(row.country)} in the network" aria-pressed="false">${imageHTML(row)}<strong>${escapeHTML(row.country)}</strong></button>`).join('')}`;
+  $('network-select').value=graph.rows[0].country;
   renderNetwork();
 }
 function renderNetwork(){
   const focus=state.rows.find(row=>row.country===$('network-select').value);
-  if(!focus || !detectedColors(focus).length) return;
+  if(!focus) return;
   const matches=closestPalettes(state.rows,focus);
-  $('network-title').textContent=`${focus.country} & its color neighbors`;
-  $('network-count').textContent=`${matches.length} closest matches`;
+  $('network-title').textContent=`All flags, connected by color`;
+  $('network-count').textContent=`${state.network.rows.length} flags · ${state.network.edges.length} links`;
   $('twins-explainer').textContent='Score = shared colors ÷ all distinct colors across both flags.';
-  const positions=matches.map((_,i)=>{const angle=-Math.PI/2+i*2*Math.PI/matches.length;return {x:50+34*Math.cos(angle),y:50+36*Math.sin(angle)};});
-  let lines=matches.map((m,i)=>`<line class="network-edge core" data-edge="center" data-a="${escapeHTML(focus.country)}" data-b="${escapeHTML(m.row.country)}" x1="50" y1="50" x2="${positions[i].x.toFixed(2)}" y2="${positions[i].y.toFixed(2)}"/>`).join('');
-  for(let i=0;i<matches.length;i++) for(let j=i+1;j<matches.length;j++){
-    if(paletteSimilarity(matches[i].row,matches[j].row).score>=NEIGHBOR_LINK_MIN){
-      lines+=`<line class="network-edge neighbor" data-edge="neighbor" data-a="${escapeHTML(matches[i].row.country)}" data-b="${escapeHTML(matches[j].row.country)}" x1="${positions[i].x.toFixed(2)}" y1="${positions[i].y.toFixed(2)}" x2="${positions[j].x.toFixed(2)}" y2="${positions[j].y.toFixed(2)}"/>`;
-    }
-  }
-  $('network-graph').innerHTML=`<svg class="network-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${lines}</svg><div class="network-node focus-node" style="left:50%;top:50%">${imageHTML(focus)}<strong>${escapeHTML(focus.country)}</strong><small>SELECTED</small></div>${matches.map((m,i)=>`<button type="button" class="network-node neighbor-node" data-network="${escapeHTML(m.row.country)}" style="left:${positions[i].x.toFixed(2)}%;top:${positions[i].y.toFixed(2)}%" aria-label="Explore ${escapeHTML(m.row.country)}, ${Math.round(m.score*100)} percent shared color-set similarity">${imageHTML(m.row)}<strong>${escapeHTML(m.row.country)}</strong><small>${Math.round(m.score*100)}% match</small></button>`).join('')}`;
+  $('network-graph').querySelectorAll('.network-node').forEach(node=>{const selected=node.dataset.network===focus.country;node.classList.toggle('selected',selected);node.setAttribute('aria-pressed',String(selected));});
+  $('network-graph').querySelectorAll('.network-edge').forEach(line=>line.classList.toggle('selected',line.dataset.a===focus.country||line.dataset.b===focus.country));
   $('twins-list').innerHTML=matches.map(m=>`<button type="button" class="twin-card" data-network="${escapeHTML(m.row.country)}"><span class="twin-flag">${imageHTML(m.row)}</span><span class="twin-copy"><strong>${escapeHTML(m.row.country)}</strong><small>Origin: ${yearText(m.row)}</small><span>Shared: ${escapeHTML(m.shared.join(', '))}</span></span><b>${Math.round(m.score*100)}<small>%</small></b></button>`).join('') || '<p>No other flags with a shared detected color were found.</p>';
+}
+function revealNetworkSelection(){
+  const node=[...$('network-graph').querySelectorAll('.network-node')].find(item=>item.dataset.network===$('network-select').value);
+  const scroll=document.querySelector('.network-scroll');
+  if(node && scroll) scroll.scrollTo?.({left:parseFloat(node.style.left)-scroll.clientWidth/2,top:parseFloat(node.style.top)-scroll.clientHeight/2,behavior:'smooth'});
 }
 function exploreExactPalette(colors){
   $('search').value='';$('era').value='all';$('scope').value='all';$('sort').value='name';$('match').value='exact';
@@ -202,23 +225,24 @@ async function createHistoryPNG(rows,field,interval){
   const margin=140, columnWidth=Math.max(96,Math.floor((2200-2*margin)/bins.length)), flagW=80, flagH=30, rowH=36;
   const canvas=document.createElement('canvas');
   canvas.width=Math.max(2200,margin*2+bins.length*columnWidth);
-  const plotTop=310, plotHeight=max*rowH+54, baseline=plotTop+plotHeight;
+  const plotTop=490, plotHeight=max*rowH+54, baseline=plotTop+plotHeight;
   const milestoneRows=Math.max(0,...bins.map(bin=>bin.milestones.length));
-  const milestoneHeight=milestones.length?90+milestoneRows*55:0;
-  const milestoneInfoHeight=milestones.length?Math.ceil(milestones.length/3)*34+40:0;
-  const unknownTop=baseline+160+milestoneHeight+milestoneInfoHeight, unknownRowH=78, unknownColumns=3;
-  const unknownFlagW=120, unknownFlagH=48;
+  const milestoneHeight=milestones.length?110+milestoneRows*76:0;
+  const milestoneInfoHeight=milestones.length?Math.ceil(milestones.length/2)*44+55:0;
+  const unknownTop=baseline+180+milestoneHeight+milestoneInfoHeight, unknownRowH=130, unknownColumns=2;
+  const unknownFlagW=180, unknownFlagH=80;
   const unknownHeight=Math.max(1,Math.ceil(unknown.length/unknownColumns))*unknownRowH;
-  canvas.height=unknownTop+100+unknownHeight+115;
+  canvas.height=unknownTop+150+unknownHeight+145;
   const ctx=canvas.getContext('2d'); if(!ctx) throw new Error('Canvas is unavailable in this browser.');
   ctx.fillStyle='#f8f6ed'; ctx.fillRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle='#17343b'; ctx.font='700 26px sans-serif'; ctx.fillText('FLAG STORIES   /   A VISUAL ATLAS',margin,64);
-  ctx.font='bold 58px Georgia, serif'; ctx.fillText(field==='flag_origin_year'?'The origins of flags':'When current flags were adopted',margin,142);
-  ctx.fillStyle='#526d64'; ctx.font='25px sans-serif';
-  ctx.fillText(`${dated.length} dated flags · ${unknown.length} without a recorded date · ${interval}-year intervals`,margin,193);
-  ctx.font='22px sans-serif';
-  ctx.fillText(field==='flag_origin_year'?'Origin dates can refer to designs, precursors, first use or adoption; they are not a uniform creation date.':'The current adoption year is distinct from the origin of a design or its colors.',margin,235);
-  ctx.fillText('Each tile in the bars represents one flag. Column labels mark the first year of each interval.',margin,269);
+  ctx.fillStyle='#17343b'; ctx.font='700 38px sans-serif'; ctx.fillText('FLAG STORIES   /   A VISUAL ATLAS',margin,80);
+  ctx.font='bold 92px Georgia, serif'; ctx.fillText(field==='flag_origin_year'?'The origins of flags':'When current flags were adopted',margin,195);
+  ctx.fillStyle='#526d64'; ctx.font='40px sans-serif';
+  ctx.fillText(`${dated.length} dated flags · ${unknown.length} without a recorded date · ${interval}-year intervals`,margin,263);
+  ctx.font='31px sans-serif';
+  ctx.fillText(field==='flag_origin_year'?'Origin dates may refer to a design, precursor, first use or adoption.':'Current adoption is distinct from the origin of a design or its colors.',margin,325);
+  ctx.fillText('These dates are not uniform creation dates. Each tile represents one flag.',margin,371);
+  ctx.fillText('Column labels mark the first year of each interval.',margin,417);
   ctx.save(); ctx.globalAlpha=.11; ctx.fillStyle='#17343b'; ctx.font='bold 76px sans-serif';
   ctx.textAlign='center'; ctx.translate(canvas.width*.53,plotTop+plotHeight*.48); ctx.rotate(-.12); ctx.fillText('@Calcetinletal',0,0); ctx.restore();
   ctx.strokeStyle='#cbd6cb'; ctx.fillStyle='#5d756a'; ctx.font='21px sans-serif'; ctx.textAlign='right';
@@ -233,35 +257,35 @@ async function createHistoryPNG(rows,field,interval){
     ctx.font='22px sans-serif';ctx.fillText(String(bin.start),x+flagW/2,baseline+38);
   });
   if(milestones.length){
-    ctx.textAlign='left';ctx.fillStyle='#a4472a';ctx.font='bold 20px sans-serif';
-    ctx.fillText('OUTLINED FLAGS: DOCUMENTED MILESTONES · ORIGIN UNKNOWN · NOT INCLUDED IN THE COUNTS ABOVE',margin,baseline+82);
+    ctx.textAlign='left';ctx.fillStyle='#a4472a';ctx.font='bold 28px sans-serif';
+    ctx.fillText('OUTLINED FLAGS: DOCUMENTED MILESTONES · NOT INCLUDED IN THE COUNTS',margin,baseline+90);
     bins.forEach((bin,index)=>bin.milestones.forEach((milestone,i)=>{
-      const x=margin+index*columnWidth+(columnWidth-flagW)/2,y=baseline+102+i*55;
-      drawFlag(ctx,images.get(milestone.row.country),x,y,flagW,flagH);
-      ctx.strokeStyle='#c75e37';ctx.lineWidth=3;ctx.strokeRect(x,y,flagW,flagH);
-      ctx.fillStyle='#a4472a';ctx.font='bold 18px sans-serif';ctx.textAlign='center';ctx.fillText(String(milestone.year),x+flagW/2,y+49);
+      const x=margin+index*columnWidth+(columnWidth-flagW)/2,y=baseline+112+i*76;
+      drawFlag(ctx,images.get(milestone.row.country),x,y,flagW,42);
+      ctx.strokeStyle='#c75e37';ctx.lineWidth=3;ctx.strokeRect(x,y,flagW,42);
+      ctx.fillStyle='#a4472a';ctx.font='bold 25px sans-serif';ctx.textAlign='center';ctx.fillText(String(milestone.year),x+flagW/2,y+68);
     }));
     const kindLabel={documented_depiction:'depiction',documented_adoption:'adoption',documented_regulation:'regulation',documented_version_change:'version change'};
-    const infoTop=baseline+112+milestoneRows*55,infoWidth=(canvas.width-margin*2)/3;
-    ctx.font='20px sans-serif';ctx.fillStyle='#794a39';ctx.textAlign='left';
-    milestones.forEach((m,i)=>ctx.fillText(`${m.row.country} ${m.year} · ${kindLabel[m.kind]}`,margin+(i%3)*infoWidth,infoTop+Math.floor(i/3)*34));
+    const infoTop=baseline+132+milestoneRows*76,infoWidth=(canvas.width-margin*2)/2;
+    ctx.font='28px sans-serif';ctx.fillStyle='#794a39';ctx.textAlign='left';
+    milestones.forEach((m,i)=>ctx.fillText(`${m.row.country} ${m.year} · ${kindLabel[m.kind]}`,margin+(i%2)*infoWidth,infoTop+Math.floor(i/2)*44));
   }
-  ctx.textAlign='left'; ctx.fillStyle='#17343b';ctx.font='bold 36px sans-serif';
+  ctx.textAlign='left'; ctx.fillStyle='#17343b';ctx.font='bold 52px sans-serif';
   ctx.fillText(`UNKNOWN ${field==='flag_origin_year'?'ORIGIN':'ADOPTION'} YEAR  ·  ${unknown.length}`,margin,unknownTop);
-  ctx.fillStyle='#526d64';ctx.font='25px sans-serif';ctx.fillText('Included separately because no reliable year is recorded in the supplied dataset.',margin,unknownTop+42);
+  ctx.fillStyle='#526d64';ctx.font='34px sans-serif';ctx.fillText('Included separately because no reliable year is recorded in the supplied dataset.',margin,unknownTop+56);
   const cell=(canvas.width-margin*2)/unknownColumns;
   unknown.forEach((row,i)=>{
-    const x=margin+(i%unknownColumns)*cell,y=unknownTop+70+Math.floor(i/unknownColumns)*unknownRowH;
+    const x=margin+(i%unknownColumns)*cell,y=unknownTop+95+Math.floor(i/unknownColumns)*unknownRowH;
     drawFlag(ctx,images.get(row.country),x,y,unknownFlagW,unknownFlagH);
-    ctx.fillStyle='#17343b';ctx.font='28px sans-serif';
+    ctx.fillStyle='#17343b';ctx.font='44px sans-serif';
     let name=row.country; while(name.length>1&&ctx.measureText(name).width>cell-unknownFlagW-20) name=name.slice(0,-1);
     if(name!==row.country) name=name.trimEnd()+'…';
-    ctx.fillText(name,x+unknownFlagW+16,y+33);
+    ctx.fillText(name,x+unknownFlagW+24,y+55);
   });
   const footer=canvas.height-42;
-  ctx.fillStyle='#17343b';ctx.font='bold 22px sans-serif';ctx.fillText('FLAG STORIES  ·  @Calcetinletal',margin,footer);
-  ctx.textAlign='right';ctx.font='20px sans-serif';ctx.fillText('Sources: supplied dataset and milestone records · Flags: FlagCDN / Wikimedia Commons',canvas.width-margin,footer);
-  ctx.font='18px sans-serif';ctx.fillText('calcetinletal.github.io/flag-atlas/',canvas.width-margin,footer+28);
+  ctx.fillStyle='#17343b';ctx.font='bold 28px sans-serif';ctx.fillText('FLAG STORIES  ·  @Calcetinletal',margin,footer);
+  ctx.textAlign='right';ctx.font='25px sans-serif';ctx.fillText('Sources: supplied dataset and milestone records · Flags: FlagCDN / Wikimedia Commons',canvas.width-margin,footer);
+  ctx.font='22px sans-serif';ctx.fillText('calcetinletal.github.io/flag-atlas/',canvas.width-margin,footer+28);
   const blob=await new Promise((resolve,reject)=>canvas.toBlob(value=>value?resolve(value):reject(new Error('PNG creation failed.')),'image/png'));
   return {blob,width:canvas.width,height:canvas.height};
 }
@@ -337,9 +361,9 @@ async function init(){
     $('more').addEventListener('click',()=>{state.limit+=24;render();});
     $('cards').addEventListener('click',e=>{const card=e.target.closest('[data-country]'); if(card) details(state.rows.find(r=>r.country===card.dataset.country));});
     $('palette-combos').addEventListener('click',e=>{const combo=e.target.closest('[data-colors]');if(combo) exploreExactPalette(combo.dataset.colors.split(','));});
-    $('network-select').addEventListener('change',renderNetwork);
+    $('network-select').addEventListener('change',()=>{renderNetwork();revealNetworkSelection();});
     $('network-details').addEventListener('click',()=>{const row=state.rows.find(r=>r.country===$('network-select').value);if(row) details(row);});
-    ['network-graph','twins-list'].forEach(id=>$(id).addEventListener('click',e=>{const node=e.target.closest('[data-network]');if(node){$('network-select').value=node.dataset.network;renderNetwork();$('network-select').focus();}}));
+    ['network-graph','twins-list'].forEach(id=>$(id).addEventListener('click',e=>{const node=e.target.closest('[data-network]');if(node){$('network-select').value=node.dataset.network;renderNetwork();if(id==='twins-list')revealNetworkSelection();$('network-select').focus({preventScroll:true});}}));
     $('timeline').addEventListener('click',e=>{const bar=e.target.closest('[data-period]'); if(bar){$('era').value=bar.dataset.period;state.limit=24;render();}});
     ['history-measure','history-bin'].forEach(id=>$(id).addEventListener('change',renderHistory));
     $('download-history').addEventListener('click',downloadHistory);
