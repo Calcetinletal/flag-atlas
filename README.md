@@ -2,6 +2,8 @@
 
 A static GitHub Pages atlas of the flags in the supplied `national_flag_creation_years.csv`. It offers search and approximate image-derived color filters, a date histogram with one tile per entry, sourced flag accounts, and a small origin-year game. Serve the directory over HTTP, e.g. `python3 -m http.server`, rather than opening the HTML as a `file:` URL.
 
+The color lab counts how many classified flags contain each detected color and shows the most frequent complete detected palettes; selecting one opens the exact-palette filter. The interactive network and Flag Twins rank up to eight flags by the number of shared detected colors divided by the number of distinct colors in both flags, with ties ordered by name. Faint links between neighbors require a similarity of at least two thirds. These are comparisons of broad, approximate color sets, not evidence of historical influence; they do not compare designs or color proportions. The pixel classifier can omit details below 1%.
+
 The timeline defaults to `flag_origin_year`, which the input defines variously as design, first adoption, precursor, or documented use. It is **not** a uniform creation or current-adoption date. A separate control selects `current_adoption_year`; undated entries appear with their names and flags above the plot and inside the PNG export. For some flags whose origin is unknown, an outlined marker beneath the axis identifies a separately sourced, dated historical milestone; it is not counted as an origin date. The full chart can be downloaded in the chosen date measure and interval, with an `@Calcetinletal` watermark. Data and attribution limitations are described on the site and in `AUDIT.md`.
 
 ## Sources and reproduction
@@ -19,6 +21,7 @@ curl -fsSL https://codeload.github.com/factbook/factbook.json/tar.gz/144d6977b2b
 python3 test_data.py /tmp/flag_factbook.tar.gz
 node --check app.js
 node test_site.cjs /path/to/node_modules/jsdom
+node test_palette.cjs /path/to/node_modules/jsdom
 node test_export.cjs /path/to/node_modules/jsdom /path/to/node_modules/@napi-rs/canvas /tmp/flag-timeline.png
 python3 verify_deployment.py https://calcetinletal.github.io/flag-atlas/
 ```

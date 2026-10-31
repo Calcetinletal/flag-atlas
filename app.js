@@ -70,6 +70,75 @@ function reset(){
   render();
 }
 
+// Color sets are derived from the displayed illustrations, not official color lists.
+const NETWORK_LIMIT=8, NEIGHBOR_LINK_MIN=2/3;
+function detectedColors(row){
+  if(!Array.isArray(row.colors) || !row.colors.length || row.colors.some(c=>!Object.hasOwn(palette,c))) return [];
+  return [...new Set(row.colors)].sort((a,b)=>Object.keys(palette).indexOf(a)-Object.keys(palette).indexOf(b));
+}
+function paletteSimilarity(a,b){
+  const left=new Set(detectedColors(a)),right=new Set(detectedColors(b));
+  const shared=[...left].filter(color=>right.has(color));
+  const union=new Set([...left,...right]).size;
+  return {shared,score:union?shared.length/union:0};
+}
+function closestPalettes(rows,focus){
+  if(!detectedColors(focus).length) return [];
+  return rows.filter(row=>row.country!==focus.country && detectedColors(row).length).map(row=>({row,...paletteSimilarity(focus,row)})).filter(item=>item.shared.length>0).sort((a,b)=>b.score-a.score || a.row.country.localeCompare(b.row.country)).slice(0,NETWORK_LIMIT);
+}
+function colorStatistics(rows){
+  const eligible=rows.filter(row=>detectedColors(row).length);
+  const counts=Object.keys(palette).map(color=>({color,count:eligible.filter(row=>detectedColors(row).includes(color)).length})).sort((a,b)=>b.count-a.count || a.color.localeCompare(b.color));
+  const grouped=new Map();
+  for(const row of eligible){
+    const colors=detectedColors(row),key=colors.join(',');
+    if(!grouped.has(key)) grouped.set(key,{colors,count:0});
+    grouped.get(key).count++;
+  }
+  const combos=[...grouped.values()].sort((a,b)=>b.count-a.count || a.colors.join(',').localeCompare(b.colors.join(',')));
+  return {eligible,counts,combos};
+}
+function renderPaletteStats(){
+  const {eligible,counts,combos}=colorStatistics(state.rows),total=eligible.length;
+  $('palette-denominator').textContent=`Across ${total} flags with classified illustrations.`;
+  $('palette-bars').innerHTML=counts.map(({color,count})=>{
+    const pct=total?count/total*100:0;
+    return `<li><span class="stat-color"><i style="--swatch:${palette[color]}"></i>${color}</span><span class="stat-track"><span style="width:${pct.toFixed(3)}%;background:${palette[color]}"></span></span><span class="stat-number">${count} <small>${pct.toFixed(1)}%</small></span></li>`;
+  }).join('');
+  $('palette-combos').innerHTML=combos.slice(0,6).map(item=>`<button type="button" class="combo-card" data-colors="${escapeHTML(item.colors.join(','))}" aria-label="Show ${item.count} flags whose detected colors are ${escapeHTML(item.colors.join(', '))}"><span class="combo-swatches">${item.colors.map(c=>`<i style="--swatch:${palette[c]}"></i>`).join('')}</span><span class="combo-names">${escapeHTML(item.colors.join(' · '))}</span><strong>${item.count}<small> flags</small></strong></button>`).join('') || '<p>No color data is available.</p>';
+}
+function initNetwork(){
+  const eligible=state.rows.filter(row=>detectedColors(row).length).slice().sort((a,b)=>a.country.localeCompare(b.country));
+  $('network-select').innerHTML=eligible.map(row=>`<option value="${escapeHTML(row.country)}">${escapeHTML(row.country)}</option>`).join('');
+  if(!eligible.length){$('network-graph').textContent='No classified flags are available.';return;}
+  $('network-select').value=eligible[0].country;
+  renderNetwork();
+}
+function renderNetwork(){
+  const focus=state.rows.find(row=>row.country===$('network-select').value);
+  if(!focus || !detectedColors(focus).length) return;
+  const matches=closestPalettes(state.rows,focus);
+  $('network-title').textContent=`${focus.country} & its color neighbors`;
+  $('network-count').textContent=`${matches.length} closest matches`;
+  $('twins-explainer').textContent='Score = shared colors ÷ all distinct colors across both flags.';
+  const positions=matches.map((_,i)=>{const angle=-Math.PI/2+i*2*Math.PI/matches.length;return {x:50+34*Math.cos(angle),y:50+36*Math.sin(angle)};});
+  let lines=matches.map((m,i)=>`<line class="network-edge core" data-edge="center" data-a="${escapeHTML(focus.country)}" data-b="${escapeHTML(m.row.country)}" x1="50" y1="50" x2="${positions[i].x.toFixed(2)}" y2="${positions[i].y.toFixed(2)}"/>`).join('');
+  for(let i=0;i<matches.length;i++) for(let j=i+1;j<matches.length;j++){
+    if(paletteSimilarity(matches[i].row,matches[j].row).score>=NEIGHBOR_LINK_MIN){
+      lines+=`<line class="network-edge neighbor" data-edge="neighbor" data-a="${escapeHTML(matches[i].row.country)}" data-b="${escapeHTML(matches[j].row.country)}" x1="${positions[i].x.toFixed(2)}" y1="${positions[i].y.toFixed(2)}" x2="${positions[j].x.toFixed(2)}" y2="${positions[j].y.toFixed(2)}"/>`;
+    }
+  }
+  $('network-graph').innerHTML=`<svg class="network-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${lines}</svg><div class="network-node focus-node" style="left:50%;top:50%">${imageHTML(focus)}<strong>${escapeHTML(focus.country)}</strong><small>SELECTED</small></div>${matches.map((m,i)=>`<button type="button" class="network-node neighbor-node" data-network="${escapeHTML(m.row.country)}" style="left:${positions[i].x.toFixed(2)}%;top:${positions[i].y.toFixed(2)}%" aria-label="Explore ${escapeHTML(m.row.country)}, ${Math.round(m.score*100)} percent shared color-set similarity">${imageHTML(m.row)}<strong>${escapeHTML(m.row.country)}</strong><small>${Math.round(m.score*100)}% match</small></button>`).join('')}`;
+  $('twins-list').innerHTML=matches.map(m=>`<button type="button" class="twin-card" data-network="${escapeHTML(m.row.country)}"><span class="twin-flag">${imageHTML(m.row)}</span><span class="twin-copy"><strong>${escapeHTML(m.row.country)}</strong><small>Origin: ${yearText(m.row)}</small><span>Shared: ${escapeHTML(m.shared.join(', '))}</span></span><b>${Math.round(m.score*100)}<small>%</small></b></button>`).join('') || '<p>No other flags with a shared detected color were found.</p>';
+}
+function exploreExactPalette(colors){
+  $('search').value='';$('era').value='all';$('scope').value='all';$('sort').value='name';$('match').value='exact';
+  state.selected=new Set(colors);state.limit=24;
+  document.querySelectorAll('.color-option').forEach(button=>button.setAttribute('aria-pressed',String(state.selected.has(button.dataset.color))));
+  $('color-count').textContent=`${state.selected.size} selected`;render();
+  document.getElementById('explore').scrollIntoView?.({behavior:'smooth'});
+}
+
 function checkedMilestones(rows, records){
   return Object.entries(records).map(([country,record])=>{
     const matches=rows.filter(row=>row.country===country);
@@ -262,11 +331,15 @@ async function init(){
     }
     $('hero-count').textContent=state.rows.length; $('hero-dated').textContent=state.rows.filter(r=>r.flag_origin_year!==null).length;
     $('history-summary').insertAdjacentHTML('afterend','<p id="milestone-legend" class="milestone-legend"><span></span> Outlined flags below the years mark documented milestones for flags with unknown origins. They are not creation years and are not counted in the bars. Select one for its source.</p>');
-    initColors(); render(); renderHistory(); nextRound();
+    initColors(); render(); renderPaletteStats(); initNetwork(); renderHistory(); nextRound();
     ['search','era','scope','match','sort'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',()=>{state.limit=24;render();}));
     $('reset').addEventListener('click',reset); $('empty-reset').addEventListener('click',reset);
     $('more').addEventListener('click',()=>{state.limit+=24;render();});
     $('cards').addEventListener('click',e=>{const card=e.target.closest('[data-country]'); if(card) details(state.rows.find(r=>r.country===card.dataset.country));});
+    $('palette-combos').addEventListener('click',e=>{const combo=e.target.closest('[data-colors]');if(combo) exploreExactPalette(combo.dataset.colors.split(','));});
+    $('network-select').addEventListener('change',renderNetwork);
+    $('network-details').addEventListener('click',()=>{const row=state.rows.find(r=>r.country===$('network-select').value);if(row) details(row);});
+    ['network-graph','twins-list'].forEach(id=>$(id).addEventListener('click',e=>{const node=e.target.closest('[data-network]');if(node){$('network-select').value=node.dataset.network;renderNetwork();$('network-select').focus();}}));
     $('timeline').addEventListener('click',e=>{const bar=e.target.closest('[data-period]'); if(bar){$('era').value=bar.dataset.period;state.limit=24;render();}});
     ['history-measure','history-bin'].forEach(id=>$(id).addEventListener('change',renderHistory));
     $('download-history').addEventListener('click',downloadHistory);
