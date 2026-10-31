@@ -70,23 +70,115 @@ function reset(){
   render();
 }
 
-function renderHistory(){
-  const field = $('history-measure').value, width = Number($('history-bin').value);
-  const dated = state.rows.filter(r => Number.isInteger(r[field]));
-  const unknown = state.rows.filter(r => !Number.isInteger(r[field]));
-  if (!dated.length) { $('history-chart').textContent = 'No dates available.'; return; }
+function historyData(rows, field, width){
+  const dated = rows.filter(r => Number.isInteger(r[field]));
+  const unknown = rows.filter(r => !Number.isInteger(r[field])).sort((a,b)=>a.country.localeCompare(b.country));
+  if(!dated.length) return {dated, unknown, bins:[], max:0};
   const first = Math.floor(Math.min(...dated.map(r=>r[field]))/width)*width;
   const last = Math.floor(Math.max(...dated.map(r=>r[field]))/width)*width;
   const bins = [];
   for(let start=first; start<=last; start+=width){
     bins.push({start, rows:dated.filter(r=>r[field]>=start && r[field]<start+width).sort((a,b)=>a[field]-b[field] || a.country.localeCompare(b.country))});
   }
-  const max = Math.max(...bins.map(b=>b.rows.length));
-  const plotHeight = Math.max(110, max*20+27);
+  return {dated, unknown, bins, max:Math.max(...bins.map(b=>b.rows.length))};
+}
+
+function renderHistory(){
+  const field = $('history-measure').value, width = Number($('history-bin').value);
+  const {dated,unknown,bins,max}=historyData(state.rows,field,width);
+  if (!dated.length) { $('history-chart').textContent = 'No dates available.'; return; }
+  const rowHeight=30, plotHeight = Math.max(150, max*rowHeight+35);
+  const ticks=[];
+  for(let n=0;n<=max;n+=10) ticks.push(`<span class="history-tick" style="bottom:${n*rowHeight}px">${n}</span>`);
   $('history-summary').textContent = `${dated.length} dated entries · ${unknown.length} without a date`;
-  $('history-chart').innerHTML = `<div class="history-axis" style="height:${plotHeight}px"><span>NUMBER<br>OF FLAGS</span><b>${max}</b><b>0</b></div><div class="history-columns" style="--plot-height:${plotHeight}px">${bins.map(bin=>`<div class="history-column"><div class="history-stack" style="height:${plotHeight}px">${bin.rows.length ? `<span class="history-total">${bin.rows.length}</span>` : ''}${bin.rows.slice().reverse().map(row=>`<button type="button" class="history-tile" data-country="${escapeHTML(row.country)}" title="${escapeHTML(row.country)} · ${row[field]}" aria-label="${escapeHTML(row.country)}, ${row[field]}. Open details.">${row.image ? `<img src="${escapeHTML(row.image)}" alt="" loading="lazy">` : '<span>?</span>'}</button>`).join('')}</div><span class="history-year">${bin.start}</span></div>`).join('')}</div>`;
-  $('undated-summary').textContent = `${unknown.length} entries without ${field === 'flag_origin_year' ? 'an origin' : 'an adoption'} year`;
-  $('undated-list').innerHTML = unknown.map(r=>`<button type="button" data-country="${escapeHTML(r.country)}">${escapeHTML(r.country)} ↗</button>`).join('');
+  $('history-chart').innerHTML = `<div class="history-axis" style="height:${plotHeight}px"><span class="history-axis-title">FLAGS</span>${ticks.join('')}</div><div class="history-columns" style="--plot-height:${plotHeight}px">${bins.map(bin=>`<div class="history-column"><div class="history-stack" style="height:${plotHeight}px">${bin.rows.length ? `<span class="history-total">${bin.rows.length}</span>` : ''}${bin.rows.slice().reverse().map(row=>`<button type="button" class="history-tile" data-country="${escapeHTML(row.country)}" title="${escapeHTML(row.country)} · ${row[field]}" aria-label="${escapeHTML(row.country)}, ${row[field]}. Open details.">${row.image ? `<img src="${escapeHTML(row.image)}" alt="" loading="lazy">` : '<span>?</span>'}</button>`).join('')}</div><span class="history-year">${bin.start}</span></div>`).join('')}</div>`;
+  $('undated-summary').textContent = `${unknown.length} flags with ${field === 'flag_origin_year' ? 'unknown origin' : 'unknown adoption'} year`;
+  $('undated-list').innerHTML = unknown.length ? unknown.map(r=>`<button type="button" data-country="${escapeHTML(r.country)}">${imageHTML(r)}<span>${escapeHTML(r.country)}</span></button>`).join('') : '<p>All entries have a recorded date for this measure.</p>';
+}
+
+function loadFlagImage(row){
+  return new Promise((resolve,reject)=>{
+    if(!row.image) return reject(new Error(`No illustration for ${row.country}`));
+    const img=new Image();
+    img.onload=()=>resolve([row.country,img]);
+    img.onerror=()=>reject(new Error(`Could not load the flag of ${row.country}`));
+    img.src=row.image;
+  });
+}
+
+function drawFlag(ctx,img,x,y,width,height){
+  ctx.fillStyle='#fff'; ctx.fillRect(x,y,width,height);
+  const scale=Math.min(width/img.naturalWidth,height/img.naturalHeight);
+  const w=img.naturalWidth*scale,h=img.naturalHeight*scale;
+  ctx.drawImage(img,x+(width-w)/2,y+(height-h)/2,w,h);
+  ctx.strokeStyle='#aab9af'; ctx.lineWidth=1; ctx.strokeRect(x+.5,y+.5,width-1,height-1);
+}
+
+async function createHistoryPNG(rows,field,interval){
+  const {dated,unknown,bins,max}=historyData(rows,field,interval);
+  if(!dated.length) throw new Error('There are no dated flags for this measure.');
+  const images=new Map(await Promise.all(rows.map(loadFlagImage)));
+  const margin=140, columnWidth=Math.max(96,Math.floor((2200-2*margin)/bins.length)), flagW=80, flagH=30, rowH=36;
+  const canvas=document.createElement('canvas');
+  canvas.width=Math.max(2200,margin*2+bins.length*columnWidth);
+  const plotTop=310, plotHeight=max*rowH+54, baseline=plotTop+plotHeight;
+  const unknownTop=baseline+160, unknownRowH=58, unknownColumns=4;
+  const unknownHeight=Math.max(1,Math.ceil(unknown.length/unknownColumns))*unknownRowH;
+  canvas.height=unknownTop+100+unknownHeight+115;
+  const ctx=canvas.getContext('2d'); if(!ctx) throw new Error('Canvas is unavailable in this browser.');
+  ctx.fillStyle='#f8f6ed'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='#17343b'; ctx.font='700 26px sans-serif'; ctx.fillText('FLAG STORIES   /   A VISUAL ATLAS',margin,64);
+  ctx.font='bold 58px Georgia, serif'; ctx.fillText(field==='flag_origin_year'?'The origins of flags':'When current flags were adopted',margin,142);
+  ctx.fillStyle='#526d64'; ctx.font='25px sans-serif';
+  ctx.fillText(`${dated.length} dated flags · ${unknown.length} without a recorded date · ${interval}-year intervals`,margin,193);
+  ctx.font='22px sans-serif';
+  ctx.fillText(field==='flag_origin_year'?'Origin dates can refer to designs, precursors, first use or adoption; they are not a uniform creation date.':'The current adoption year is distinct from the origin of a design or its colors.',margin,235);
+  ctx.fillText('Each tile represents one flag. Column labels mark the first year of each interval.',margin,269);
+  ctx.save(); ctx.globalAlpha=.11; ctx.fillStyle='#17343b'; ctx.font='bold 76px sans-serif';
+  ctx.textAlign='center'; ctx.translate(canvas.width*.53,plotTop+plotHeight*.48); ctx.rotate(-.12); ctx.fillText('@Calcetinletal',0,0); ctx.restore();
+  ctx.strokeStyle='#cbd6cb'; ctx.fillStyle='#5d756a'; ctx.font='21px sans-serif'; ctx.textAlign='right';
+  for(let n=0;n<=max;n+=10){const y=baseline-n*rowH; ctx.beginPath();ctx.moveTo(margin-12,y);ctx.lineTo(canvas.width-margin+12,y);ctx.stroke();ctx.fillText(String(n),margin-24,y+7);}
+  ctx.save();ctx.translate(38,plotTop+plotHeight/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillStyle='#526d64';ctx.font='bold 22px sans-serif';ctx.fillText('NUMBER OF FLAGS',0,0);ctx.restore();
+  ctx.textAlign='center';
+  bins.forEach((bin,index)=>{
+    const x=margin+index*columnWidth+(columnWidth-flagW)/2;
+    bin.rows.forEach((row,i)=>drawFlag(ctx,images.get(row.country),x,baseline-(i+1)*rowH,flagW,flagH));
+    ctx.fillStyle='#17343b';ctx.font='bold 21px sans-serif';
+    if(bin.rows.length) ctx.fillText(String(bin.rows.length),x+flagW/2,baseline-bin.rows.length*rowH-10);
+    ctx.font='22px sans-serif';ctx.fillText(String(bin.start),x+flagW/2,baseline+38);
+  });
+  ctx.textAlign='left'; ctx.fillStyle='#17343b';ctx.font='bold 29px sans-serif';
+  ctx.fillText(`UNKNOWN ${field==='flag_origin_year'?'ORIGIN':'ADOPTION'} YEAR  ·  ${unknown.length}`,margin,unknownTop);
+  ctx.fillStyle='#526d64';ctx.font='21px sans-serif';ctx.fillText('Included separately because no reliable year is recorded in the supplied dataset.',margin,unknownTop+36);
+  const cell=(canvas.width-margin*2)/unknownColumns;
+  unknown.forEach((row,i)=>{
+    const x=margin+(i%unknownColumns)*cell,y=unknownTop+58+Math.floor(i/unknownColumns)*unknownRowH;
+    drawFlag(ctx,images.get(row.country),x,y,flagW,flagH);
+    ctx.fillStyle='#17343b';ctx.font='22px sans-serif';
+    let name=row.country; while(name.length>1&&ctx.measureText(name).width>cell-flagW-20) name=name.slice(0,-1);
+    if(name!==row.country) name=name.trimEnd()+'…';
+    ctx.fillText(name,x+flagW+12,y+22);
+  });
+  const footer=canvas.height-42;
+  ctx.fillStyle='#17343b';ctx.font='bold 22px sans-serif';ctx.fillText('FLAG STORIES  ·  @Calcetinletal',margin,footer);
+  ctx.textAlign='right';ctx.font='20px sans-serif';ctx.fillText('Source: supplied flag origins dataset · Illustrations: FlagCDN / Wikimedia Commons',canvas.width-margin,footer);
+  ctx.font='18px sans-serif';ctx.fillText('calcetinletal.github.io/flag-atlas/',canvas.width-margin,footer+28);
+  const blob=await new Promise((resolve,reject)=>canvas.toBlob(value=>value?resolve(value):reject(new Error('PNG creation failed.')),'image/png'));
+  return {blob,width:canvas.width,height:canvas.height};
+}
+
+async function downloadHistory(){
+  const button=$('download-history'),status=$('download-status');
+  const field=$('history-measure').value,interval=Number($('history-bin').value);
+  button.disabled=true;status.textContent='Preparing the full-resolution PNG…';
+  try {
+    const result=await createHistoryPNG(state.rows,field,interval);
+    const url=URL.createObjectURL(result.blob),link=document.createElement('a');
+    link.href=url;link.download=`flag-stories-${field==='flag_origin_year'?'origins':'adoptions'}-${interval}y.png`;
+    document.body.appendChild(link);link.click();link.remove();window.setTimeout(()=>URL.revokeObjectURL(url),30000);
+    status.textContent=`Downloaded ${result.width.toLocaleString()} × ${result.height.toLocaleString()} px PNG.`;
+  } catch(error) {console.error(error);status.textContent=`Could not create the chart: ${error.message}. Please try again.`;}
+  finally {button.disabled=false;}
 }
 
 function details(row){
@@ -140,6 +232,7 @@ async function init(){
     $('cards').addEventListener('click',e=>{const card=e.target.closest('[data-country]'); if(card) details(state.rows.find(r=>r.country===card.dataset.country));});
     $('timeline').addEventListener('click',e=>{const bar=e.target.closest('[data-period]'); if(bar){$('era').value=bar.dataset.period;state.limit=24;render();}});
     ['history-measure','history-bin'].forEach(id=>$(id).addEventListener('change',renderHistory));
+    $('download-history').addEventListener('click',downloadHistory);
     ['history-chart','undated-list'].forEach(id=>$(id).addEventListener('click',e=>{const tile=e.target.closest('[data-country]'); if(tile) details(state.rows.find(r=>r.country===tile.dataset.country));}));
     $('close-dialog').addEventListener('click',()=>$('details').close());
     $('details').addEventListener('click',e=>{if(e.target===$('details')) $('details').close();});

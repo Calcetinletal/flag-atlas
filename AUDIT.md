@@ -14,6 +14,12 @@ World Factbook archive: `https://codeload.github.com/factbook/factbook.json/tar.
 
 `verify_deployment.py` compares the SHA-256 of the deployed HTML, scripts, data, source CSV, attribution and every referenced flag image against the checkout. This check must be run again after any deployment or input change.
 
+## Timeline download and Denmark — 31 October 2026
+
+The dataset leaves Denmark's origin and adoption years empty. The [Danish Embassy](https://um.dk/estland/en/denmark-and-estonia/national-symbols/danish-national-flag) describes the 1219 story as a legend and identifies evidence from the 14th century; [Danmarkshistorien / Lex](https://danmarkshistorien.lex.dk/Dannebrog) identifies an approximately 1380 depiction, which is evidence of use rather than an exact creation date. No year has been imputed. All unknown-year flags are now visible, named, in a separate panel on the web and a separate section of the exported chart.
+
+`test_site.cjs` checks all six combinations of two date measures and three interval sizes against independently counted rows, checks Denmark's undated tile and its details, and exercises the existing filters and quiz. `test_export.cjs` uses jsdom and a real `@napi-rs/canvas` renderer to test the six PNG variants: every one of the 205 flags is drawn once, dated flags appear in their correct interval, undated names and watermark appear, and all rendered flags have visible nonblank pixels. A deliberately missing image causes a rejection. The download button path and filename are exercised. The default 20-year origin export is 4,120 × 2,655 pixels and was inspected as a PNG; it is not a real-browser rendering test. User-visible rendering and download behavior in a real browser remain unverified because browser access was unavailable.
+
 Tests run after the last generated data change:
 
 ```text

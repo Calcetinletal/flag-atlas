@@ -44,9 +44,15 @@ function checkTimeline(field, width){
   assert.equal(displayedCount(),rows.length);
   assert.equal(Number($('hero-count').textContent),rows.length);
   checkTimeline('flag_origin_year',20);
+  const denmark=doc.querySelector('#undated-list [data-country="Denmark"]');
+  assert.ok(denmark, 'Denmark must be visible among undated flags');
+  assert.ok(denmark.querySelector('img'), 'Undated entries display their flag');
+  click(denmark); assert.match($('detail-content').textContent,/Exact creation and first adoption years are unknown/); click($('close-dialog'));
   change('history-bin','50'); checkTimeline('flag_origin_year',50);
   change('history-bin','100'); checkTimeline('flag_origin_year',100);
   change('history-measure','current_adoption_year'); checkTimeline('current_adoption_year',100);
+  change('history-bin','50'); checkTimeline('current_adoption_year',50);
+  change('history-bin','20'); checkTimeline('current_adoption_year',20);
   click(timelineTiles()[0]); assert.ok($('details').open); assert.ok($('detail-content').textContent.includes('History & symbolism')); click($('close-dialog')); assert.equal($('details').open,false);
   $('search').value='spain'; $('search').dispatchEvent(new window.Event('input',{bubbles:true}));
   assert.equal(displayedCount(),1); click(doc.querySelector('.card')); assert.match($('detail-content').textContent,/Charles III/); click($('close-dialog'));
